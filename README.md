@@ -1,4 +1,4 @@
-# Ledger Bitcoin Application
+# Ledger Qtum Application
 
 ## Prerequisite
 
@@ -58,3 +58,39 @@ It outputs 4 artifacts:
 - `bitcoin-app-debug` within output files of the compilation process in debug mode
 - `code-coverage` within HTML details of code coverage
 - `documentation` within HTML auto-generated documentation
+
+## Develop on Ubuntu
+
+This is a quick start script for developing app-qtum on Ubuntu.
+
+    # Install docker
+    sudo apt update
+    sudo apt install snapd
+    sudo snap refresh snapd
+    sudo snap install docker
+    sudo addgroup --system docker
+    sudo adduser $USER docker
+    newgrp docker
+    sudo snap disable docker
+    sudo snap enable docker
+    
+    # Pull the latest dev tool
+    sudo docker pull ghcr.io/ledgerhq/ledger-app-builder/ledger-app-dev-tools:latest
+
+    # Clone app-qtum
+    sudo apt install git -y
+    git clone https://github.com/qtumproject/app-qtum
+    
+    # Add rules for the supported devices
+    sudo app-qtum/script/add_udev_rules.sh
+    
+    # Add ledger_env with command line to ~/.bashrc
+    app-qtum/script/ledger_ubuntu_env.sh
+    source ~/.bashrc
+    
+    # Build the ledger app
+    cd app-qtum
+    ledger_env
+    make
+    make load
+    exit
