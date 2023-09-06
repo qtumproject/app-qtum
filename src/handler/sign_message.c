@@ -30,7 +30,7 @@
 
 #include "handlers.h"
 
-static unsigned char const BSM_SIGN_MAGIC[] = {'\x18', 'B', 'i', 't', 'c', 'o', 'i', 'n', ' ',
+static unsigned char const BSM_SIGN_MAGIC[] = {'\x15', 'Q', 't', 'u', 'm', ' ',
                                                'S',    'i', 'g', 'n', 'e', 'd', ' ', 'M', 'e',
                                                's',    's', 'a', 'g', 'e', ':', '\n'};
 

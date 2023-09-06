@@ -113,6 +113,8 @@ int call_get_merkle_preimage(dispatcher_context_t *dispatcher_context,
             n_bytes);
 
         // write bytes to output
+        data_ptr =
+        dispatcher_context->read_buffer.ptr + dispatcher_context->read_buffer.offset;
         buffer_write_bytes(&out_buffer, data_ptr, n_bytes);
 
         bytes_remaining -= n_bytes;
