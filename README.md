@@ -26,7 +26,7 @@ make load     # load the app on the Nano using ledgerblue
 ## Documentation
 
 High level documentation on the architecture and interface of the app:
-- [bitcoin.md](doc/bitcoin.md): specifications of application commands.
+- [qtum.md](doc/qtum.md): specifications of application commands.
 - [wallet.md](doc/wallet.md): supported wallet signing policies.
 - [merkle.md](doc/merkle.md): rationale and specifications for the usage of Merkle trees.
 
@@ -55,7 +55,7 @@ The flow processed in [GitHub Actions](https://github.com/features/actions) is t
 
 It outputs 4 artifacts:
 
-- `bitcoin-app-debug` within output files of the compilation process in debug mode
+- `qtum-app-debug` within output files of the compilation process in debug mode
 - `code-coverage` within HTML details of code coverage
 - `documentation` within HTML auto-generated documentation
 
