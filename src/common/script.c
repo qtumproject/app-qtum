@@ -394,7 +394,7 @@ bool get_script_sender_address(uint8_t *buffer, size_t size, uint8_t *script) {
     uint8_t *pkh = 0;
     unsigned int pkhSize = 0;
     bool ret = find_script_data(buffer, size, 2, HAVE_SCRIPT_SIZE, &pkh, &pkhSize) == 1 && pkh != 0 && pkhSize == 20;
-    if(ret) get_script_p2pkh(pkh, script, HAVE_SCRIPT_SIZE);
+    if(ret) get_script_p2pkh(pkh, script, 1);
     return ret;
 }
 
