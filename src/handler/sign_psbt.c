@@ -2878,7 +2878,9 @@ bool compute_op_sender_hashes(dispatcher_context_t *dc, sign_psbt_state_t *st, u
         }
 
         crypto_hash_digest(&sha_prevouts_context.header, sha_prevouts, 32);
+        cx_hash_sha256(sha_prevouts, 32, sha_prevouts, 32);
         crypto_hash_digest(&sha_sequences_context.header, sha_sequences, 32);
+        cx_hash_sha256(sha_sequences, 32, sha_sequences, 32);
     }
 
     if(sha_outputs)
@@ -2893,6 +2895,7 @@ bool compute_op_sender_hashes(dispatcher_context_t *dc, sign_psbt_state_t *st, u
         }
 
         crypto_hash_digest(&sha_outputs_context.header, sha_outputs, 32);
+        cx_hash_sha256(sha_outputs, 32, sha_outputs, 32);
     }
 
     return true;
