@@ -32,7 +32,7 @@
 /**
  * Maximum scriptPubKey length for an output that we can recognize.
  */
-#define MAX_OUTPUT_SCRIPTPUBKEY_LEN 393  // max 393 for contracts; other scripts are shorter
+#define MAX_OUTPUT_SCRIPTPUBKEY_LEN 400  // max 393 for contracts; other scripts are shorter
 #define MAX_INPUT_SCRIPTPUBKEY_LEN 83  // max 83 for OP_RETURN; other scripts are shorter
 
 /**

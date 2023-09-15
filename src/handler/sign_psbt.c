@@ -249,7 +249,7 @@ static int hash_output_n(dispatcher_context_t *dc,
                                                        1,
                                                        out_script,
                                                        sizeof(out_script));
-    if (out_script_len == -1) {
+    if (out_script_len < 0) {
         return -1;
     }
 
@@ -707,7 +707,7 @@ init_global_state(dispatcher_context_t *dc, sign_psbt_state_t *st) {
                                                    1,
                                                    raw_result,
                                                    sizeof(raw_result));
-        if (result_len == -1) {
+        if (result_len < 0) {
             st->locktime = 0;
         } else if (result_len != 4) {
             SEND_SW(dc, SW_INCORRECT_DATA);
@@ -1407,7 +1407,7 @@ static bool read_outputs(dispatcher_context_t *dc,
                                                        output.in_out.scriptPubKey,
                                                        sizeof(output.in_out.scriptPubKey));
 
-        if (result_len == -1 || result_len > (int) sizeof(output.in_out.scriptPubKey)) {
+        if (result_len < 0 || result_len > (int) sizeof(output.in_out.scriptPubKey)) {
             SEND_SW(dc, SW_INCORRECT_DATA);
             return false;
         }
