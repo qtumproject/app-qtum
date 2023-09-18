@@ -27,7 +27,7 @@
 /**
  * Maximum scriptPubKey length for an input that we can sign.
  */
-#define MAX_PREVOUT_SCRIPTPUBKEY_LEN 34  // P2WSH's scriptPubKeys are the longest supported
+#define MAX_PREVOUT_SCRIPTPUBKEY_LEN 35  // P2PK's scriptPubKeys are the longest supported
 
 /**
  * Maximum scriptPubKey length for an output that we can recognize.
