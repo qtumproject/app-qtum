@@ -254,8 +254,10 @@ bool get_script_sender_address(uint8_t *buffer, size_t size, uint8_t *script);
 
 bool get_sender_sig(uint8_t *buffer, size_t size, uint8_t **sig, unsigned int *sigSize);
 
+#ifndef SKIP_FOR_CMOCKA
 bool opcall_addr_encode(const uint8_t script[],
                         size_t script_len,
                         char *out,
                         size_t out_len,
                         bool isOpSender);
+#endif

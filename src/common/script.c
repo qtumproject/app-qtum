@@ -3,6 +3,7 @@
 #include <string.h>
 #include <limits.h>
 #include <string.h>  // strncpy, memmove
+#include <stdio.h>   // snprintf
 
 #include "../common/bip32.h"
 #include "../common/buffer.h"
@@ -393,16 +394,17 @@ bool get_sender_sig(uint8_t *buffer, size_t size, uint8_t **sig, unsigned int *s
            *sigSize > 0;
 }
 
+#ifndef SKIP_FOR_CMOCKA
 #define DELEGATIONS_ADDRESS    "\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x86"
 #define ADD_DELEGATION_HASH    "\x4c\x0e\x96\x8c"
 #define REMOVE_DELEGATION_HASH "\x3d\x66\x6e\x8b"
 
-uint16_t public_key_to_encoded_base58(uint8_t *in,
-                                      uint16_t inlen,
-                                      char *out,
-                                      size_t outlen,
-                                      uint16_t version,
-                                      uint8_t alreadyHashed) {
+int16_t public_key_to_encoded_base58(uint8_t *in,
+                                     uint16_t inlen,
+                                     char *out,
+                                     size_t outlen,
+                                     uint16_t version,
+                                     uint8_t alreadyHashed) {
     uint8_t tmpBuffer[34];
 
     uint8_t versionSize = (version > 255 ? 2 : 1);
@@ -425,10 +427,7 @@ uint16_t public_key_to_encoded_base58(uint8_t *in,
     crypto_get_checksum(tmpBuffer, 20 + versionSize, tmpBuffer + 20 + versionSize);
 
     outputLen = base58_encode_address(tmpBuffer, 24 + versionSize, out, outlen);
-    if (outputLen < 0) {
-        THROW(EXCEPTION);
-    }
-    return (uint16_t) outputLen;
+    return (int16_t) outputLen;
 }
 
 bool opcall_addr_encode(const uint8_t script[],
@@ -470,7 +469,7 @@ bool opcall_addr_encode(const uint8_t script[],
         if (strncmp(functionhash, ADD_DELEGATION_HASH, sizeof(functionhash)) == 0) {
             uint8_t stakeraddress[21];
             char stakerbase58[80];
-            uint16_t stakerbase58size;
+            int16_t stakerbase58size;
             uint8_t delegationfee;
             stakeraddress[0] = COIN_P2PKH_VERSION;
 
@@ -483,6 +482,7 @@ bool opcall_addr_encode(const uint8_t script[],
                                                             sizeof(stakerbase58),
                                                             COIN_P2PKH_VERSION,
                                                             1);
+            if (stakerbase58size < 0) return 0;
             stakerbase58[stakerbase58size] = '\0';
 
             delegationfee = script[pos + 17 + 20 + 31];
@@ -503,3 +503,4 @@ bool opcall_addr_encode(const uint8_t script[],
 
     return 1;
 }
+#endif
