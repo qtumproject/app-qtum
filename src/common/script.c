@@ -119,7 +119,7 @@ int get_script_address(const uint8_t script[], size_t script_len, char *out, siz
             break;
         }
         case SCRIPT_TYPE_CREATE_SENDER: {
-            strcpy(out, "OP_SENDER_CREATE");
+            strncpy(out, "OP_SENDER_CREATE", out_len);
             addr_len = strlen(out);
             break;
         }
@@ -132,7 +132,7 @@ int get_script_address(const uint8_t script[], size_t script_len, char *out, siz
             break;
         }
         case SCRIPT_TYPE_CREATE: {
-            strcpy(out, "OP_CREATE");
+            strncpy(out, "OP_CREATE", out_len);
             addr_len = strlen(out);
             break;
         }
@@ -240,7 +240,7 @@ int format_opscript_script_short(const uint8_t script[],
         return -1;
     }
 
-    strcpy(out, "OP_RETURN");
+    strncpy(out, "OP_RETURN", MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT);
     int out_ctr = strlen(out);
     out[out_ctr++] = '\0';
     return out_ctr;
@@ -500,7 +500,7 @@ bool opcall_addr_encode(const uint8_t script[], size_t script_len, char *out, si
                     delegationfee);
         } else if (strncmp(functionhash, REMOVE_DELEGATION_HASH,
                 sizeof(functionhash)) == 0) {
-            strcpy(out, "Undelegate");
+            strncpy(out, "Undelegate", out_len);
         }
     } else {
         uint8_t contractaddressstring[41];

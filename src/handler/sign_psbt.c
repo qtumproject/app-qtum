@@ -1490,7 +1490,7 @@ process_outputs(dispatcher_context_t *dc, sign_psbt_state_t *st, output_hashes_t
     // As it's a time-consuming operation, we use avoid doing this useless
     // work on other models.
 
-    if (!read_outputs(dc, st, &placeholder_info, true)) return false;
+    if (!read_outputs(dc, st, &placeholder_info, true, 0, 0, 0)) return false;
 
     if (!ui_transaction_prompt(dc, st->outputs.n_external)) {
         SEND_SW(dc, SW_DENY);
