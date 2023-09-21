@@ -21,6 +21,11 @@ int compare_wallet_script_at_path(dispatcher_context_t *dispatcher_context,
 
     // derive wallet's scriptPubKey, check if it matches the expected one
     uint8_t wallet_script[MAX_PREVOUT_SCRIPTPUBKEY_LEN];
+    bool need_p2pk_type = expected_script_len == 35 && policy->type == TOKEN_PKH;
+    if(need_p2pk_type) {
+        // Overwrite PKH to PK for P2PK inputs
+        ((policy_node_t*)policy)->type = TOKEN_PK;
+    }
     int wallet_script_len =
         get_wallet_script(dispatcher_context,
                           policy,
@@ -30,6 +35,9 @@ int compare_wallet_script_at_path(dispatcher_context_t *dispatcher_context,
                                                       .change = change,
                                                       .address_index = address_index},
                           wallet_script);
+    if(need_p2pk_type) {
+        ((policy_node_t*)policy)->type = TOKEN_PKH;
+    }
     if (wallet_script_len < 0) {
         PRINTF("Failed to get wallet script\n");
         return -1;  // shouldn't happen

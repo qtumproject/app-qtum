@@ -941,7 +941,7 @@ int __attribute__((noinline)) compute_taptree_hash(dispatcher_context_t *dc,
 int get_wallet_script(dispatcher_context_t *dispatcher_context,
                       const policy_node_t *policy,
                       const wallet_derivation_info_t *wdi,
-                      uint8_t out[static 34]) {
+                      uint8_t out[static 35]) {
     int script_type = -1;
 
     cx_sha256_t hash_context;
@@ -966,6 +966,21 @@ int get_wallet_script(dispatcher_context_t *dispatcher_context,
         out[23] = OP_EQUALVERIFY;
         out[24] = OP_CHECKSIG;
         return 25;
+    } else if (policy->type == TOKEN_PK) {
+        uint8_t compressed_pubkey[33];
+        policy_node_with_key_t *pkh_policy = (policy_node_with_key_t *) policy;
+        if (0 > get_derived_pubkey(dispatcher_context,
+                                   wdi,
+                                   pkh_policy->key_placeholder,
+                                   compressed_pubkey)) {
+            return -1;
+        }
+        out[0] = 33;  // PUSH 33 bytes
+
+        memcpy(out + 1, compressed_pubkey, 33);
+
+        out[34] = OP_CHECKSIG;
+        return 35;
     } else if (policy->type == TOKEN_WPKH) {
         uint8_t compressed_pubkey[33];
         policy_node_with_key_t *wpkh_policy = (policy_node_with_key_t *) policy;

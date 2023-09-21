@@ -140,9 +140,9 @@ The wallet policy is serialized as the concatenation of:
 - `1 byte`: a byte equal to `0x02`, the version of the wallet policy language
 - `1 byte`: the length of the wallet name (0 for standard wallet)
 - `<variable length>`:  the wallet name (empty for standard wallets)
-- `<variable length>`: the length of the wallet descriptor template, encoded as a Bitcoin-style variable-length integer
+- `<variable length>`: the length of the wallet descriptor template, encoded as a Qtum-style variable-length integer
 - `32 bytes`: the sha256 hash of the wallet descriptor template
-- `<variable length>`: the number of keys in the list of keys, encoded as a Bitcoin-style variable-length integer
+- `<variable length>`: the number of keys in the list of keys, encoded as a Qtum-style variable-length integer
 - `<32 bytes>`: the root of the canonical Merkle tree of the list of keys
 
 See [merkle](merkle.md) for information on Merkle trees.

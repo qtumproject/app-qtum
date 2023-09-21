@@ -1,5 +1,8 @@
 #pragma once
 
+#define BIP32_PUBKEY_VERSION_MAINNET 0x0488B21E
+#define BIP32_PUBKEY_VERSION_TESTNET 0x043587CF
+
 /**
  * Instruction class of the Bitcoin application.
  */
@@ -24,12 +27,13 @@
 /**
  * Maximum scriptPubKey length for an input that we can sign.
  */
-#define MAX_PREVOUT_SCRIPTPUBKEY_LEN 34  // P2WSH's scriptPubKeys are the longest supported
+#define MAX_PREVOUT_SCRIPTPUBKEY_LEN 35  // P2PK's scriptPubKeys are the longest supported
 
 /**
  * Maximum scriptPubKey length for an output that we can recognize.
  */
-#define MAX_OUTPUT_SCRIPTPUBKEY_LEN 83  // max 83 for OP_RETURN; other scripts are shorter
+#define MAX_OUTPUT_SCRIPTPUBKEY_LEN 400  // max 393 for contracts; other scripts are shorter
+#define MAX_INPUT_SCRIPTPUBKEY_LEN 83  // max 83 for OP_RETURN; other scripts are shorter
 
 /**
  * Maximum length of a wallet registered into the device (characters), excluding terminating NULL.

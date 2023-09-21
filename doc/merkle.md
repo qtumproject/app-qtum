@@ -62,7 +62,7 @@ and
 ### Serialization
 
 A Merklelized Map commitment is serialized as a string of bytes containing, in sequence:
-- the number of key-value pairs, encoded as a Bitcoin-style varint;
+- the number of key-value pairs, encoded as a Qtum-style varint;
 - the 32 bytes `keys_root`
 - the 32 bytes `values_root`
 

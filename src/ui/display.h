@@ -54,7 +54,7 @@ typedef struct {
 
 typedef struct {
     char index[sizeof("output #999")];
-    char address_or_description[MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE)];
+    char address_or_description[MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT)];
     char amount[MAX_AMOUNT_LENGTH + 1];
 } ui_validate_output_state_t;
 
@@ -135,7 +135,7 @@ bool ui_validate_output(dispatcher_context_t *context,
 bool ui_validate_transaction(dispatcher_context_t *context,
                              const char *coin_name,
                              uint64_t fee,
-                             bool is_self_transfer);
+                             bool is_self_transfer, bool sign_sender);
 
 void set_ux_flow_response(bool approved);
 
@@ -165,7 +165,7 @@ void ui_display_output_address_amount_flow(int index);
 
 void ui_display_output_address_amount_no_index_flow(int index);
 
-void ui_accept_transaction_flow(bool is_self_transfer);
+void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender);
 
 void ui_display_transaction_prompt(const int external_outputs_total_count);
 

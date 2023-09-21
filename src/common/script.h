@@ -142,6 +142,12 @@ enum opcodetype {
     // Opcode added by BIP 342 (Tapscript)
     OP_CHECKSIGADD = 0xba,
 
+    // Execute EXT byte code.
+    OP_CREATE = 0xc1,
+    OP_CALL = 0xc2,
+    OP_SPEND = 0xc3,
+    OP_SENDER = 0xc4,
+
     OP_INVALIDOPCODE = 0xff,
 };
 
@@ -151,7 +157,11 @@ typedef enum {
     SCRIPT_TYPE_P2WPKH = 0x02,
     SCRIPT_TYPE_P2WSH = 0x03,
     SCRIPT_TYPE_P2TR = 0x04,
-    SCRIPT_TYPE_UNKNOWN_SEGWIT = 0xFF  // a valid but undefined segwit script
+    SCRIPT_TYPE_UNKNOWN_SEGWIT = 0xFF,  // a valid but undefined segwit script
+    SCRIPT_TYPE_CREATE_SENDER,
+    SCRIPT_TYPE_CALL_SENDER,
+    SCRIPT_TYPE_CREATE,
+    SCRIPT_TYPE_CALL,
 } script_type_e;
 
 static inline bool is_p2wpkh(const uint8_t script[], size_t script_len) {
@@ -165,6 +175,12 @@ static inline bool is_p2wsh(const uint8_t script[], size_t script_len) {
 static inline bool is_opreturn(const uint8_t script[], size_t script_len) {
     return script_len > 0 && script_len <= 83 && script[0] == OP_RETURN;
 }
+
+bool is_opcreate(const uint8_t script[], size_t script_len);
+
+bool is_opcall(const uint8_t script[], size_t script_len);
+
+bool is_opsender(const uint8_t script[], size_t script_len);
 
 /**
  * Returns the size in bytes of the minimal push opcode for <n>, where n a uint32_t.
@@ -201,6 +217,7 @@ int get_script_address(const uint8_t script[], size_t script_len, char *out, siz
 
 // the longest OP_RETURN description "OP_RETURN 0x" followed by 160 hexadecimal characters
 #define MAX_OPRETURN_OUTPUT_DESC_SIZE (12 + 80 * 2 + 1)
+#define MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT (9 + 1)
 
 /**
  * Formats a valid OP_RETURN script for user verification. The resulting string is "OP_RETURN
@@ -223,3 +240,12 @@ int get_script_address(const uint8_t script[], size_t script_len, char *out, siz
 int format_opscript_script(const uint8_t script[],
                            size_t script_len,
                            char out[static MAX_OPRETURN_OUTPUT_DESC_SIZE]);
+
+int format_opscript_script_short(const uint8_t script[],
+                           size_t script_len,
+                           char out[static MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT]);
+
+bool get_script_size(uint8_t *buffer, size_t maxSize, unsigned int *scriptSize, unsigned int *discardSize);
+bool get_script_sender_address(uint8_t *buffer, size_t size, uint8_t *script);
+bool get_sender_sig(uint8_t *buffer, size_t size, uint8_t **sig, unsigned int *sigSize);
+bool opcall_addr_encode(const uint8_t script[], size_t script_len, char *out, size_t out_len, bool isOpSender);

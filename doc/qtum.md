@@ -1,4 +1,4 @@
-# Bitcoin application: Technical Specifications
+# Qtum application: Technical Specifications
 
 This page details the protocol implemented since version 2.1.0 of the app.
 
@@ -10,7 +10,7 @@ The protocol documentation for version from 2.0.0 and before 2.1.0 is [here](./v
 
 The messaging format of the app is compatible with the [APDU protocol](https://developers.ledger.com/docs/nano-app/application-structure/#apdu-interpretation-loop). The `P1` field is reserved for future use and must be set to `0` in all messages. The `P2` field is used as a protocol version identifier; the current version is `1`, while version `0` is still supported. No other value must be used.
 
-The main commands use `CLA = 0xE1`, unlike the legacy Bitcoin application that used `CLA = 0xE0`.
+The main commands use `CLA = 0xE1`, unlike the legacy Qtum application that used `CLA = 0xE0`.
 
 | CLA | INS | COMMAND NAME           | DESCRIPTION |
 |-----|-----|------------------------|-------------|
@@ -19,7 +19,8 @@ The main commands use `CLA = 0xE1`, unlike the legacy Bitcoin application that u
 |  E1 |  03 | GET_WALLET_ADDRESS     | Return and show on screen an address for a registered or default wallet |
 |  E1 |  04 | SIGN_PSBT              | Sign a PSBT with a registered or default wallet |
 |  E1 |  05 | GET_MASTER_FINGERPRINT | Return the fingerprint of the master public key |
-|  E1 |  10 | SIGN_MESSAGE           | Sign a message with a key from a BIP32 path (Bitcoin Message Signing) |
+|  E1 |  10 | SIGN_MESSAGE           | Sign a message with a key from a BIP32 path (Qtum Message Signing) |
+|  E1 |  81 | SIGN_SENDER_PSBT       | Sign an op_sender output |
 
 The `CLA = 0xF8` is used for framework-specific (rather than app-specific) APDUs; at this time, only one command is present.
 
@@ -37,7 +38,7 @@ The specs for the client commands are detailed below.
 
 ## Descriptors and wallet policies
 
-The Bitcoin app uses a language similar to [output script descriptors](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md) in order to represent the wallets that can be used to sign transactions.
+The Qtum app uses a language similar to [output script descriptors](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md) in order to represent the wallets that can be used to sign transactions.
 Wallet policies need to be registered on the device, with an interactive process that requires user's approval.
 
 See [here](wallet.md) for detailed information on the wallet policy language.
@@ -65,7 +66,7 @@ Once the user approves, the `REGISTER_WALLET` returns to the client a 32-byte HM
 | 0xE000 | `SW_INTERRUPTED_EXECUTION`   | The command is interrupted, and requires the client's response |
 | 0x9000 | `SW_OK`                      | Success |
 
-<!-- TODO: add an introduction section explaining the comand reference notations (e.g. the Bitcoin style varint) -->
+<!-- TODO: add an introduction section explaining the comand reference notations (e.g. the Qtum style varint) -->
 
 ## Commands
 
@@ -230,7 +231,7 @@ No output data; the signature are returned using the YIELD client command.
 Using the information in the PSBT and the wallet description, this command verifies what inputs are internal and what outputs match the pattern for a change address. After validating all the external outputs and the transaction fee with the user, it signs each of the internal inputs; each signature is sent to the client using the YIELD command, in the format described below. If multiple key placeholders of the wallet policy are internal, the process is repeated for each of them.
 
 The results yielded via the YIELD command respect the following format: `<input_index> <pubkey_augm_len> <pubkey_augm> <signature>`, where:
-- `input_index` is a Bitcoin style varint, the index input of the input being signed (starting from 0);
+- `input_index` is a Qtum style varint, the index input of the input being signed (starting from 0);
 - `pubkey_augm_len` is an unsigned byte equal to the length of `pubkey_augm`;
 - `pubkey_augm` is the `pubkey` used for signing for legacy, segwit or taproot script path spends (a compressed pubkey if non-taproot, a 32-byte x-only pubkey if taproot); for taproot script path spends, it is the concatenation of the `x-only` pubkey and the 32-byte *tapleaf hash* as defined in [BIP-0341](https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki);
 - `signature` is the returned signature, possibly concatenated with the sighash byte (as it would be pushed on the stack).
@@ -282,7 +283,7 @@ User interaction is not required for this command.
 
 ### SIGN_MESSAGE
 
-Signs a message, according to the standard Bitcoin Message Signing.
+Signs a message, according to the standard Qtum Message Signing.
 
 The device shows on its secure screen the BIP-32 path used for signing, and the SHA256 hash of the message; the hash should be verified by the user using an external tool if the client is untrusted.
 
@@ -303,7 +304,7 @@ The device shows on its secure screen the BIP-32 path used for signing, and the 
 | `4`     | `bip32_path[1]`   | Second derivation step (big endian) |
 |         | ...               |             |
 | `4`     | `bip32_path[n-1]` | `n`-th derivation step (big endian) |
-| `<var>` | `msg_length`      | The byte length of the message to sign (Bitcoin-style varint) |
+| `<var>` | `msg_length`      | The byte length of the message to sign (Qtum-style varint) |
 | `32`    | `msg_merkle_root` | The Merkle root of the message, split in 64-byte chunks |
 
 The message to be signed is split into `ceil(msg_length/64)` chunks of 64 bytes (except the last chunk that could be smaller); `msg_merkle_root` is the root of the Merkle tree of the corresponding list of chunks.
@@ -314,7 +315,7 @@ The theoretical maximum valid length of the message is 2<sup>32</sup>-1 = 4&nbsp
 
 | Length | Description |
 |--------|-------------|
-| `65`   | The returned signature, encoded in the standard Bitcoin message signing format |
+| `65`   | The returned signature, encoded in the standard Qtum message signing format |
 
 The signature is returned as a 65-byte binary string (1 byte equal to 32 or 33, followed by `r` and `s`, each of them represented as a 32-byte big-endian integer).
 
@@ -322,8 +323,8 @@ The signature is returned as a 65-byte binary string (1 byte equal to 32 or 33, 
 
 The digest being signed is the double-SHA256 of the message, after prefixing the message with:
 
-- the magic string `"\x18Bitcoin Signed Message:\n"` (equal to `18426974636f696e205369676e6564204d6573736167653a0a` in hexadecimal)
-- the length of the message, encoded as a Bitcoin-style variable length integer.
+- the magic string `"\x18Qtum Signed Message:\n"` (equal to `185174756D205369676e6564204d6573736167653a0a` in hexadecimal)
+- the length of the message, encoded as a Qtum-style variable length integer.
 
 #### Client commands
 
@@ -360,7 +361,7 @@ The request contains:
 - `32` bytes: a sha-256 hash.
 
 The response must contain:
-- `<var>`: the length of the preimage, encoded as a Bitcoin-style varint;
+- `<var>`: the length of the preimage, encoded as a Qtum-style varint;
 - `1` byte: a 1-byte unsigned integer `b`, the length of the prefix of the pre-image that is part of the response;
 - `b` bytes: corresponding to the first `b` bytes of the preimage.
 
@@ -374,8 +375,8 @@ The `GET_MERKLE_LEAF_PROOF` command requests the hash of a given leaf of a Merkl
 
 The request contains:
 - `32` bytes: the Merkle root hash;
-- `<var>` bytes: the tree size `n`, encoded as a Bitcoin-style varint;
-- `<var>` bytes: the leaf index `i`, encoded as a Bitcoin-style varint.
+- `<var>` bytes: the tree size `n`, encoded as a Qtum-style varint;
+- `<var>` bytes: the leaf index `i`, encoded as a Qtum-style varint.
 
 The client must respond with:
 - `32` bytes: the hash of the leaf with index `i` in the requested Merkle tree;
@@ -397,7 +398,7 @@ The request contains:
 
 The response contains:
 - `1` byte: `1` if the leaf is found, `0` if matching leaf exists;
-- `<var>`: the index of the leaf, encoded as a Bitcoin-style varint.
+- `<var>`: the index of the leaf, encoded as a Qtum-style varint.
 
 ### GET_MORE_ELEMENTS
 

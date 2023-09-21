@@ -40,11 +40,11 @@ APP_STACK_SIZE = 3072
 
 # Setting to allow building variant applications
 VARIANT_PARAM = COIN
-VARIANT_VALUES = bitcoin_testnet bitcoin
+VARIANT_VALUES = qtum_testnet qtum
 
 # simplify for tests
 ifndef COIN
-COIN=bitcoin_testnet
+COIN=qtum_testnet
 endif
 
 ########################################
@@ -55,35 +55,35 @@ HAVE_APPLICATION_FLAG_GLOBAL_PIN = 1
 HAVE_APPLICATION_FLAG_BOLOS_SETTINGS = 1
 HAVE_APPLICATION_FLAG_LIBRARY = 1
 
-ifeq ($(COIN),bitcoin_testnet)
+ifeq ($(COIN),qtum_testnet)
 
-# Bitcoin testnet, no legacy support
+# Qtum testnet, no legacy support
 DEFINES   += BIP32_PUBKEY_VERSION=0x043587CF
 DEFINES   += BIP44_COIN_TYPE=1
 DEFINES   += BIP44_COIN_TYPE_2=1
-DEFINES   += COIN_P2PKH_VERSION=111
-DEFINES   += COIN_P2SH_VERSION=196
-DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"tb\"
+DEFINES   += COIN_P2PKH_VERSION=120
+DEFINES   += COIN_P2SH_VERSION=110
+DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"tq\"
 DEFINES   += COIN_COINID_SHORT=\"TEST\"
 
-APPNAME = "Bitcoin Test"
+APPNAME = "Qtum Test"
 
-else ifeq ($(COIN),bitcoin)
+else ifeq ($(COIN),qtum)
 
-# Bitcoin mainnet, no legacy support
+# Qtum mainnet, no legacy support
 DEFINES   += BIP32_PUBKEY_VERSION=0x0488B21E
-DEFINES   += BIP44_COIN_TYPE=0
-DEFINES   += BIP44_COIN_TYPE_2=0
-DEFINES   += COIN_P2PKH_VERSION=0
-DEFINES   += COIN_P2SH_VERSION=5
-DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"bc\"
-DEFINES   += COIN_COINID_SHORT=\"BTC\"
+DEFINES   += BIP44_COIN_TYPE=88
+DEFINES   += BIP44_COIN_TYPE_2=88
+DEFINES   += COIN_P2PKH_VERSION=58
+DEFINES   += COIN_P2SH_VERSION=50
+DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"qc\"
+DEFINES   += COIN_COINID_SHORT=\"QTUM\"
 
-APPNAME = "Bitcoin"
+APPNAME = "Qtum"
 
 else
 ifeq ($(filter clean,$(MAKECMDGOALS)),)
-$(error Unsupported COIN - use bitcoin_testnet, bitcoin)
+$(error Unsupported COIN - use qtum_testnet, qtum)
 endif
 endif
 
