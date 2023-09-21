@@ -204,9 +204,21 @@ It would be possible to generalize to more complex scripts, but it makes it more
 the right paths to identify internal inputs/outputs.
 */
 
-bool compute_op_sender_hashes(dispatcher_context_t *dc, sign_psbt_state_t *st, uint8_t* sha_prevouts, uint8_t* sha_sequences, uint8_t* sha_outputs);
-bool hash_sender_start(cx_sha256_t* sighash_context, uint8_t* tx_version, uint8_t* sha_prevouts, uint8_t* sha_sequences, uint8_t* sender_script, size_t sender_script_len, uint8_t* output_value);
-void hash_sender_finalize(cx_sha256_t* sighash_context, uint8_t* data_buffer, uint8_t* sha_outputs);
+bool compute_op_sender_hashes(dispatcher_context_t *dc,
+                              sign_psbt_state_t *st,
+                              uint8_t *sha_prevouts,
+                              uint8_t *sha_sequences,
+                              uint8_t *sha_outputs);
+
+bool hash_sender_start(cx_sha256_t *sighash_context,
+                       uint8_t *tx_version,
+                       uint8_t *sha_prevouts,
+                       uint8_t *sha_sequences,
+                       uint8_t *sender_script,
+                       size_t sender_script_len,
+                       uint8_t *output_value);
+
+void hash_sender_finalize(cx_sha256_t *sighash_context, uint8_t *data_buffer, uint8_t *sha_outputs);
 
 // HELPER FUNCTIONS
 // Updates the hash_context with the output of given index
@@ -573,9 +585,9 @@ static int read_change_and_index_from_psbt_bip32_derivation_out(
  * @return 1 if the given input/output is internal; 0 if external; -1 on error.
  */
 static int is_in_out_internal_in(dispatcher_context_t *dispatcher_context,
-                              const sign_psbt_state_t *state,
-                              const in_info_t *in_out_info,
-                              bool is_input) {
+                                 const sign_psbt_state_t *state,
+                                 const in_info_t *in_out_info,
+                                 bool is_input) {
     // If we did not find any info about the pubkey associated to the placeholder we're considering,
     // then it's external
     if (!in_out_info->placeholder_found) {
@@ -599,9 +611,9 @@ static int is_in_out_internal_in(dispatcher_context_t *dispatcher_context,
 }
 
 static int is_in_out_internal_out(dispatcher_context_t *dispatcher_context,
-                              const sign_psbt_state_t *state,
-                              const out_info_t *in_out_info,
-                              bool is_input) {
+                                  const sign_psbt_state_t *state,
+                                  const out_info_t *in_out_info,
+                                  bool is_input) {
     // If we did not find any info about the pubkey associated to the placeholder we're considering,
     // then it's external
     if (!in_out_info->placeholder_found) {
@@ -986,12 +998,12 @@ static void input_keys_callback(dispatcher_context_t *dc,
                    !callback_data->input->in_out.placeholder_found) {
             if (0 >
                 read_change_and_index_from_psbt_bip32_derivation_in(dc,
-                                                                 callback_data->placeholder_info,
-                                                                 &callback_data->input->in_out,
-                                                                 key_type,
-                                                                 data,
-                                                                 map_commitment,
-                                                                 i)) {
+                                                                    callback_data->placeholder_info,
+                                                                    &callback_data->input->in_out,
+                                                                    key_type,
+                                                                    data,
+                                                                    map_commitment,
+                                                                    i)) {
                 callback_data->input->in_out.unexpected_pubkey_error = true;
             }
         }
@@ -1271,14 +1283,14 @@ static void output_keys_callback(dispatcher_context_t *dc,
 
         if ((key_type == PSBT_OUT_BIP32_DERIVATION || key_type == PSBT_OUT_TAP_BIP32_DERIVATION) &&
             !callback_data->output->in_out.placeholder_found) {
-            if (0 >
-                read_change_and_index_from_psbt_bip32_derivation_out(dc,
-                                                                 callback_data->placeholder_info,
-                                                                 &callback_data->output->in_out,
-                                                                 key_type,
-                                                                 data,
-                                                                 map_commitment,
-                                                                 i)) {
+            if (0 > read_change_and_index_from_psbt_bip32_derivation_out(
+                        dc,
+                        callback_data->placeholder_info,
+                        &callback_data->output->in_out,
+                        key_type,
+                        data,
+                        map_commitment,
+                        i)) {
                 callback_data->output->in_out.unexpected_pubkey_error = true;
             }
         }
@@ -1302,8 +1314,8 @@ static bool __attribute__((noinline)) display_output(dispatcher_context_t *dc,
         // script does not have an address; check if OP_RETURN
         if (is_opreturn(output->in_out.scriptPubKey, output->in_out.scriptPubKey_len)) {
             int res = format_opscript_script_short(output->in_out.scriptPubKey,
-                                             output->in_out.scriptPubKey_len,
-                                             output_address);
+                                                   output->in_out.scriptPubKey_len,
+                                                   output_address);
             if (res == -1) {
                 PRINTF("Invalid or unsupported OP_RETURN for output %d\n", cur_output_index);
                 SEND_SW(dc, SW_NOT_SUPPORTED);
@@ -1346,7 +1358,10 @@ static bool __attribute__((noinline)) display_output(dispatcher_context_t *dc,
 static bool read_outputs(dispatcher_context_t *dc,
                          sign_psbt_state_t *st,
                          placeholder_info_t *placeholder_info,
-                         bool dry_run, output_hashes_t *hashes, uint8_t* hash, int* output_index) {
+                         bool dry_run,
+                         output_hashes_t *hashes,
+                         uint8_t *hash,
+                         int *output_index) {
     // the counter used when showing outputs to the user, which ignores change outputs
     // (0-indexed here, although the UX starts with 1)
     int external_outputs_count = 0;
@@ -1381,7 +1396,6 @@ static bool read_outputs(dispatcher_context_t *dc,
         // Read output amount
         uint8_t raw_result[8];
         if (!dry_run) {
-
             // Read the output's amount
             int result_len = call_get_merkleized_map_value(dc,
                                                            &output.in_out.map,
@@ -1427,9 +1441,9 @@ static bool read_outputs(dispatcher_context_t *dc,
             if (!dry_run &&
                 !display_output(dc, st, cur_output_index, external_outputs_count, &output))
                 return false;
-            if(hash)
-            {
-                isOpSender = is_opsender(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len);
+            if (hash) {
+                isOpSender =
+                    is_opsender(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len);
             }
         } else if (!dry_run) {
             // valid change address, nothing to show to the user
@@ -1438,14 +1452,19 @@ static bool read_outputs(dispatcher_context_t *dc,
             ++st->outputs.n_change;
         }
 
-        if(isOpSender)
-        {
+        if (isOpSender) {
             {
                 cx_sha256_t sighash_context;
 
                 uint8_t tx_version[4];
                 write_u32_le(tx_version, 0, st->tx_version);
-                if(!hash_sender_start(&sighash_context, tx_version, hashes->sha_prevouts, hashes->sha_sequences, output.in_out.scriptPubKey,  output.in_out.scriptPubKey_len, raw_result)) 
+                if (!hash_sender_start(&sighash_context,
+                                       tx_version,
+                                       hashes->sha_prevouts,
+                                       hashes->sha_sequences,
+                                       output.in_out.scriptPubKey,
+                                       output.in_out.scriptPubKey_len,
+                                       raw_result))
                     return false;
 
                 uint8_t data_buffer[8];
@@ -1467,8 +1486,11 @@ static bool read_outputs(dispatcher_context_t *dc,
     return true;
 }
 
-static bool __attribute__((noinline))
-process_outputs(dispatcher_context_t *dc, sign_psbt_state_t *st, output_hashes_t *hashes, uint8_t* hash, int* output_index) {
+static bool __attribute__((noinline)) process_outputs(dispatcher_context_t *dc,
+                                                      sign_psbt_state_t *st,
+                                                      output_hashes_t *hashes,
+                                                      uint8_t *hash,
+                                                      int *output_index) {
     /** OUTPUTS VERIFICATION FLOW
      *
      *  For each output, check if it's a change address.
@@ -2660,11 +2682,11 @@ sign_transaction(dispatcher_context_t *dc,
 }
 
 static bool __attribute__((noinline)) sign_transaction_output(dispatcher_context_t *dc,
-                                                             sign_psbt_state_t *st,
-                                                             uint32_t *sign_path,
-                                                             uint8_t sign_path_len,
-                                                             uint8_t* sighash,
-                                                             unsigned int output_index) {
+                                                              sign_psbt_state_t *st,
+                                                              uint32_t *sign_path,
+                                                              uint8_t sign_path_len,
+                                                              uint8_t *sighash,
+                                                              unsigned int output_index) {
     LOG_PROCESSOR(__FILE__, __LINE__, __func__);
 
     uint8_t sig[MAX_DER_SIG_LEN + 1];  // extra byte for the appended sighash-type
@@ -2760,8 +2782,13 @@ void handler_sign_psbt(dispatcher_context_t *dc, uint8_t protocol_version) {
     SEND_SW(dc, SW_OK);
 }
 
-bool hash_sender_start(cx_sha256_t* sighash_context, uint8_t* tx_version, uint8_t* sha_prevouts, uint8_t* sha_sequences, uint8_t* sender_script, size_t sender_script_len, uint8_t* output_value)
-{
+bool hash_sender_start(cx_sha256_t *sighash_context,
+                       uint8_t *tx_version,
+                       uint8_t *sha_prevouts,
+                       uint8_t *sha_sequences,
+                       uint8_t *sender_script,
+                       size_t sender_script_len,
+                       uint8_t *output_value) {
     cx_sha256_init(sighash_context);
 
     // Use cache data generated from Segwit
@@ -2780,12 +2807,9 @@ bool hash_sender_start(cx_sha256_t* sighash_context, uint8_t* tx_version, uint8_
 
     uint8_t output_script_size[3];
     size_t output_script_size_len = 1;
-    if(sender_script_len < 0xFD)
-    {
+    if (sender_script_len < 0xFD) {
         output_script_size[0] = sender_script_len;
-    }
-    else
-    {
+    } else {
         output_script_size[0] = 0xFD;
         output_script_size_len = 3;
         write_u16_le(output_script_size, 1, sender_script_len);
@@ -2796,8 +2820,7 @@ bool hash_sender_start(cx_sha256_t* sighash_context, uint8_t* tx_version, uint8_
     crypto_hash_update(&sighash_context->header, sender_script, sender_script_len);
 
     uint8_t script_code[26];
-    if(!get_script_sender_address(sender_script, sender_script_len, script_code))
-        return 0;
+    if (!get_script_sender_address(sender_script, sender_script_len, script_code)) return 0;
 
     PRINTF("--- ADD TO HASH SENDER:\n%.*H\n", sizeof(script_code), script_code);
     crypto_hash_update(&sighash_context->header, script_code, 26);
@@ -2808,17 +2831,21 @@ bool hash_sender_start(cx_sha256_t* sighash_context, uint8_t* tx_version, uint8_
     return 1;
 }
 
-void hash_sender_finalize(cx_sha256_t* sighash_context, uint8_t* data_buffer, uint8_t* sha_outputs)
-{
+void hash_sender_finalize(cx_sha256_t *sighash_context,
+                          uint8_t *data_buffer,
+                          uint8_t *sha_outputs) {
     PRINTF("--- ADD TO HASH SENDER:\n%.*H\n", 32, sha_outputs);
     crypto_hash_update(&sighash_context->header, sha_outputs, 32);
     PRINTF("--- ADD TO HASH SENDER:\n%.*H\n", 8, data_buffer);
     crypto_hash_update(&sighash_context->header, data_buffer, 8);
 }
 
-bool compute_op_sender_hashes(dispatcher_context_t *dc, sign_psbt_state_t *st, uint8_t* sha_prevouts, uint8_t* sha_sequences, uint8_t* sha_outputs) {
-    if(sha_prevouts && sha_sequences)
-    {
+bool compute_op_sender_hashes(dispatcher_context_t *dc,
+                              sign_psbt_state_t *st,
+                              uint8_t *sha_prevouts,
+                              uint8_t *sha_sequences,
+                              uint8_t *sha_outputs) {
+    if (sha_prevouts && sha_sequences) {
         // compute sha_prevouts and sha_sequences
         cx_sha256_t sha_prevouts_context, sha_sequences_context;
 
@@ -2883,8 +2910,7 @@ bool compute_op_sender_hashes(dispatcher_context_t *dc, sign_psbt_state_t *st, u
         cx_hash_sha256(sha_sequences, 32, sha_sequences, 32);
     }
 
-    if(sha_outputs)
-    {
+    if (sha_outputs) {
         // compute sha_outputs
         cx_sha256_t sha_outputs_context;
         cx_sha256_init(&sha_outputs_context);
@@ -2948,7 +2974,12 @@ void handler_sign_sender_psbt(dispatcher_context_t *dc, uint8_t protocol_version
         int output_index = -1;
         {
             output_hashes_t hashes;
-            if (!compute_op_sender_hashes(dc, &st, hashes.sha_prevouts, hashes.sha_sequences, hashes.sha_outputs)) return;
+            if (!compute_op_sender_hashes(dc,
+                                          &st,
+                                          hashes.sha_prevouts,
+                                          hashes.sha_sequences,
+                                          hashes.sha_outputs))
+                return;
             if (!process_outputs(dc, &st, &hashes, hash, &output_index)) return;
         }
         if (output_index == -1) {
@@ -2956,7 +2987,8 @@ void handler_sign_sender_psbt(dispatcher_context_t *dc, uint8_t protocol_version
             return;
         }
         if (!confirm_transaction(dc, &st, true)) return;
-        if (!sign_transaction_output(dc, &st, bip32_path, bip32_path_len, hash, output_index)) return;
+        if (!sign_transaction_output(dc, &st, bip32_path, bip32_path_len, hash, output_index))
+            return;
     }
 
     SEND_SW(dc, SW_OK);

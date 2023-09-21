@@ -216,7 +216,7 @@ int get_script_address(const uint8_t script[], size_t script_len, char *out, siz
 #endif
 
 // the longest OP_RETURN description "OP_RETURN 0x" followed by 160 hexadecimal characters
-#define MAX_OPRETURN_OUTPUT_DESC_SIZE (12 + 80 * 2 + 1)
+#define MAX_OPRETURN_OUTPUT_DESC_SIZE       (12 + 80 * 2 + 1)
 #define MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT (9 + 1)
 
 /**
@@ -242,10 +242,20 @@ int format_opscript_script(const uint8_t script[],
                            char out[static MAX_OPRETURN_OUTPUT_DESC_SIZE]);
 
 int format_opscript_script_short(const uint8_t script[],
-                           size_t script_len,
-                           char out[static MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT]);
+                                 size_t script_len,
+                                 char out[static MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT]);
 
-bool get_script_size(uint8_t *buffer, size_t maxSize, unsigned int *scriptSize, unsigned int *discardSize);
+bool get_script_size(uint8_t *buffer,
+                     size_t maxSize,
+                     unsigned int *scriptSize,
+                     unsigned int *discardSize);
+
 bool get_script_sender_address(uint8_t *buffer, size_t size, uint8_t *script);
+
 bool get_sender_sig(uint8_t *buffer, size_t size, uint8_t **sig, unsigned int *sigSize);
-bool opcall_addr_encode(const uint8_t script[], size_t script_len, char *out, size_t out_len, bool isOpSender);
+
+bool opcall_addr_encode(const uint8_t script[],
+                        size_t script_len,
+                        char *out,
+                        size_t out_len,
+                        bool isOpSender);
