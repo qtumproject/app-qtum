@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: false
     name: Build and push ledger-app-builder image
     runs-on: ubuntu-latest
     permissions:

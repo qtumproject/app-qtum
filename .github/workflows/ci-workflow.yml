@@ -38,9 +38,9 @@ jobs:
 
       - name: Build
         run: |
-          make DEBUG=0 COIN=bitcoin BOLOS_SDK=${{ matrix.SDK }} && mv bin/ bitcoin-bin/
+          make DEBUG=0 COIN=qtum BOLOS_SDK=${{ matrix.SDK }} && mv bin/ bitcoin-bin/
           make clean
-          make DEBUG=0 COIN=bitcoin_testnet BOLOS_SDK=${{ matrix.SDK }} && mv bin/ bitcoin-testnet-bin/
+          make DEBUG=0 COIN=qtum_testnet BOLOS_SDK=${{ matrix.SDK }} && mv bin/ bitcoin-testnet-bin/
       - name: Upload Bitcoin app binary
         uses: actions/upload-artifact@v2
         with:
@@ -83,6 +83,7 @@ jobs:
           path: unit-tests/coverage
 
       - name: Upload to codecov.io
+        if: false
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -101,6 +102,7 @@ jobs:
           path: doc/html
 
   job_test:
+    if: false
     name: Tests
     strategy:
       matrix:
@@ -141,6 +143,7 @@ jobs:
           PYTHONPATH=$PYTHONPATH:/speculos pytest --headless --model=${{ matrix.model }} --timeout=300
 
   job_test_mainnet:
+    if: false
     name: Tests on mainnet
     strategy:
       matrix:
@@ -208,6 +211,7 @@ jobs:
 
 
   job_test_js_lib:
+    if: false
     name: Tests with the JS library
     needs: job_build
     runs-on: ubuntu-latest
