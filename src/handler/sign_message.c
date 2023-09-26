@@ -30,9 +30,9 @@
 
 #include "handlers.h"
 
-static unsigned char const BSM_SIGN_MAGIC[] = {'\x15', 'Q', 't', 'u', 'm', ' ',
-                                               'S',    'i', 'g', 'n', 'e', 'd', ' ', 'M', 'e',
-                                               's',    's', 'a', 'g', 'e', ':', '\n'};
+static unsigned char const BSM_SIGN_MAGIC[] = {'\x15', 'Q', 't', 'u', 'm', ' ', 'S', 'i',
+                                               'g',    'n', 'e', 'd', ' ', 'M', 'e', 's',
+                                               's',    'a', 'g', 'e', ':', '\n'};
 
 void handler_sign_message(dispatcher_context_t *dc, uint8_t protocol_version) {
     (void) protocol_version;

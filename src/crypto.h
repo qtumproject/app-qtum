@@ -251,7 +251,7 @@ uint32_t crypto_get_key_fingerprint(const uint8_t pub_key[static 33]);
  * @param[out]  path
  *   Master fingerprint path.
  */
-void crypto_get_master_fingerprint_path(bip32_path_t* path);
+void crypto_get_master_fingerprint_path(bip32_path_t *path);
 
 /**
  * Computes the fingerprint of the master key as per BIP32.

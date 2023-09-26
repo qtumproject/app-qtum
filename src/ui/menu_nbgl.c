@@ -38,23 +38,23 @@ static void exit(void) {
 }
 
 void ui_menu_main_flow_bitcoin(void) {
-    nbgl_useCaseHome("Bitcoin", &C_Bitcoin_64px, NULL, false, ui_menu_about, exit);
+    nbgl_useCaseHome("Qtum", &C_Bitcoin_64px, NULL, false, ui_menu_about, exit);
 }
 
 void ui_menu_main_flow_bitcoin_testnet(void) {
-    nbgl_useCaseHome("Bitcoin Test",
+    nbgl_useCaseHome("Qtum Test",
                      &C_Bitcoin_64px,
-                     "This app enables signing\ntransactions on all the Bitcoin\ntest networks.",
+                     "This app enables signing\ntransactions on all the Qtum\ntest networks.",
                      false,
                      ui_menu_about,
                      exit);
 }
 
 void ui_menu_about(void) {
-    nbgl_useCaseSettings("Bitcoin", 0, 1, false, ui_menu_main, navigation_cb, NULL);
+    nbgl_useCaseSettings("Qtum", 0, 1, false, ui_menu_main, navigation_cb, NULL);
 }
 
 void ui_menu_about_testnet(void) {
-    nbgl_useCaseSettings("Bitcoin Test", 0, 1, false, ui_menu_main, navigation_cb, NULL);
+    nbgl_useCaseSettings("Qtum Test", 0, 1, false, ui_menu_main, navigation_cb, NULL);
 }
 #endif  // HAVE_NBGL

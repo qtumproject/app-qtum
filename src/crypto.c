@@ -266,8 +266,7 @@ uint32_t crypto_get_key_fingerprint(const uint8_t pub_key[static 33]) {
     return read_u32_be(key_rip, 0);
 }
 
-void crypto_get_master_fingerprint_path(bip32_path_t* path)
-{
+void crypto_get_master_fingerprint_path(bip32_path_t *path) {
     path->length = 0;
     if (BIP32_PUBKEY_VERSION == BIP32_PUBKEY_VERSION_MAINNET) {  // mainnet
         // Mainnet fingerprint bip32 path m/44'/88' in HWI

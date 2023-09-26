@@ -93,10 +93,10 @@ static void transaction_confirm_callback(int token, uint8_t index) {
             ux_flow_response(true);
             break;
         case BACK_TOKEN_TRANSACTION:
-            ui_accept_transaction_flow(false);
+            ui_accept_transaction_flow(false, false);
             break;
         case BACK_TOKEN_SELFTRANSFER:
-            ui_accept_transaction_flow(true);
+            ui_accept_transaction_flow(true, false);
             break;
         default:
             PRINTF("Unhandled token : %d", token);
@@ -183,7 +183,8 @@ static void transaction_confirm(int token, uint8_t index) {
     }
 }
 
-void ui_accept_transaction_flow(bool is_self_transfer) {
+void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender) {
+    UNUSED(sign_sender);
     if (!is_self_transfer) {
         transactionContext.tagValuePair[0].item = "Fees";
         transactionContext.tagValuePair[0].value = g_ui_state.validate_transaction.fee;
