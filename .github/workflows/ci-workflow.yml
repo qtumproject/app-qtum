@@ -38,20 +38,20 @@ jobs:
 
       - name: Build
         run: |
-          make DEBUG=0 COIN=qtum BOLOS_SDK=${{ matrix.SDK }} && mv bin/ bitcoin-bin/
+          make DEBUG=0 COIN=qtum BOLOS_SDK=${{ matrix.SDK }} && mv bin/ qtum-bin/
           make clean
-          make DEBUG=0 COIN=qtum_testnet BOLOS_SDK=${{ matrix.SDK }} && mv bin/ bitcoin-testnet-bin/
-      - name: Upload Bitcoin app binary
+          make DEBUG=0 COIN=qtum_testnet BOLOS_SDK=${{ matrix.SDK }} && mv bin/ qtum-testnet-bin/
+      - name: Upload Qtum app binary
         uses: actions/upload-artifact@v2
         with:
-          name: bitcoin-app-${{ matrix.model }}
-          path: bitcoin-bin
+          name: qtum-app-${{ matrix.model }}
+          path: qtum-bin
 
-      - name: Upload Bitcoin Testnet app binary
+      - name: Upload Qtum Testnet app binary
         uses: actions/upload-artifact@v2
         with:
-          name: bitcoin-testnet-app-${{ matrix.model }}
-          path: bitcoin-testnet-bin
+          name: qtum-testnet-app-${{ matrix.model }}
+          path: qtum-testnet-bin
 
   job_unit_test:
     name: Unit test
@@ -89,7 +89,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./unit-tests/coverage.info
           flags: unittests
-          name: codecov-app-bitcoin
+          name: codecov-app-qtum
           fail_ci_if_error: true
           verbose: true
       
@@ -130,10 +130,10 @@ jobs:
       - name: Clone
         uses: actions/checkout@v2
 
-      - name: Download Bitcoin Testnet app binary
+      - name: Download Qtum Testnet app binary
         uses: actions/download-artifact@v2
         with:
-          name: bitcoin-testnet-app-${{matrix.model}}
+          name: qtum-testnet-app-${{matrix.model}}
           path: bin
 
       - name: Run tests
@@ -171,10 +171,10 @@ jobs:
       - name: Clone
         uses: actions/checkout@v2
 
-      - name: Download Bitcoin app binary
+      - name: Download Qtum app binary
         uses: actions/download-artifact@v2
         with:
-          name: bitcoin-app-${{matrix.model}}
+          name: qtum-app-${{matrix.model}}
           path: bin
 
       - name: Run tests
@@ -184,7 +184,7 @@ jobs:
           PYTHONPATH=$PYTHONPATH:/speculos pytest --headless --model=${{ matrix.model }} --timeout=300
 
   job_test_python_lib_legacyapp:
-    name: Tests with the Python library and legacy Bitcoin app
+    name: Tests with the Python library and legacy Qtum app
     needs: job_build
     runs-on: ubuntu-latest
 
@@ -240,10 +240,10 @@ jobs:
         run: |
           npm install -g yarn
 
-      - name: Download Bitcoin Testnet app binary
+      - name: Download Qtum Testnet app binary
         uses: actions/download-artifact@v2
         with:
-          name: bitcoin-testnet-app-nanos
+          name: qtum-testnet-app-nanos
           path: bin
 
       - name: Run tests
