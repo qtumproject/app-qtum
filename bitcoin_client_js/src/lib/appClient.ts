@@ -361,10 +361,10 @@ export class AppClient {
   }
 
   /**
-   * Signs a message using the legacy Bitcoin Message Signing standard. The signed message is
+   * Signs a message using the legacy Qtum Message Signing standard. The signed message is
    * the double-sha256 hash of the concatenation of:
-   * - "\x18Bitcoin Signed Message:\n";
-   * - the length of `message`, encoded as a Bitcoin-style variable length integer;
+   * - "\x18Qtum Signed Message:\n";
+   * - the length of `message`, encoded as a Qtum-style variable length integer;
    * - `message`.
    *
    * @param message the serialized message to sign
@@ -416,7 +416,7 @@ export class AppClient {
       if (["2.1.0", "2.1.1"].includes(appAndVer.version)) {
         // Versions 2.1.0 and 2.1.1 produced incorrect scripts for policies containing
         // the `a:` fragment.
-        throw new Error("Please update your Ledger Bitcoin app.")
+        throw new Error("Please update your Ledger Qtum app.")
       }
     }
 
@@ -427,7 +427,7 @@ export class AppClient {
         // containing an unusual thresh fragment with k = n = 1, that is "thresh(1,X)".
         // (The check above has false positives, as it also matches "thresh" fragments
         // where n > 1; however, better to be overzealous).
-        throw new Error("Please update your Ledger Bitcoin app.")
+        throw new Error("Please update your Ledger Qtum app.")
       }
     }
   }

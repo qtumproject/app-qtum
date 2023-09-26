@@ -1,7 +1,7 @@
 {
-  "name": "ledger-bitcoin",
+  "name": "ledger-qtum",
   "version": "0.2.1",
-  "description": "Ledger Hardware Wallet Bitcoin Application Client",
+  "description": "Ledger Hardware Wallet Qtum Application Client",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "repository": "https://github.com/LedgerHW/app-bitcoin-new",
@@ -9,8 +9,8 @@
   "keywords": [
     "Ledger",
     "LedgerWallet",
-    "btc",
-    "Bitcoin",
+    "qtum",
+    "Qtum",
     "NanoS",
     "NanoX",
     "Hardware Wallet"

@@ -130,13 +130,13 @@ describe("test AppClient", () => {
 
   it("can retrieve the app's version", async () => {
     const result = await app.getAppAndVersion();
-    expect(result.name).toEqual("Bitcoin Test");
+    expect(result.name).toEqual("Qtum Test");
     expect(result.version.split(".")[0]).toEqual("2")
   });
 
   it("can retrieve the master fingerprint", async () => {
     const result = await app.getMasterFingerprint();
-    expect(result).toEqual("f5acc2fd");
+    expect(result).toEqual("350a4bc9");
   });
 
   it("can get an extended pubkey", async () => {
@@ -155,67 +155,67 @@ describe("test AppClient", () => {
     }[] = [
       // legacy
       {
-        policy: new DefaultWalletPolicy("pkh(@0/**)", "[f5acc2fd/44'/1'/0']tpubDCwYjpDhUdPGP5rS3wgNg13mTrrjBuG8V9VpWbyptX6TRPbNoZVXsoVUSkCjmQ8jJycjuDKBb9eataSymXakTTaGifxR6kmVsfFehH1ZgJT"),
+        policy: new DefaultWalletPolicy("pkh(@0/**)", "[350a4bc9/44'/1'/0']tpubDCwYjpDhUdPGP5rS3wgNg13mTrrjBuG8V9VpWbyptX6TRPbNoZVXsoVUSkCjmQ8jJycjuDKBb9eataSymXakTTaGifxR6kmVsfFehH1ZgJT"),
         change: 0,
         addrIndex: 0,
-        expResult: "mz5vLWdM1wHVGSmXUkhKVvZbJ2g4epMXSm",
+        expResult: "qc8MCVJwQZTNdM2JhXhBs41fxZzZ8HN9cR",
       },
       {
-        policy: new DefaultWalletPolicy("pkh(@0/**)", "[f5acc2fd/44'/1'/0']tpubDCwYjpDhUdPGP5rS3wgNg13mTrrjBuG8V9VpWbyptX6TRPbNoZVXsoVUSkCjmQ8jJycjuDKBb9eataSymXakTTaGifxR6kmVsfFehH1ZgJT"),
+        policy: new DefaultWalletPolicy("pkh(@0/**)", "[350a4bc9/44'/1'/0']tpubDCwYjpDhUdPGP5rS3wgNg13mTrrjBuG8V9VpWbyptX6TRPbNoZVXsoVUSkCjmQ8jJycjuDKBb9eataSymXakTTaGifxR6kmVsfFehH1ZgJT"),
         change: 1,
         addrIndex: 15,
-        expResult: "myFCUBRCKFjV7292HnZtiHqMzzHrApobpT",
+        expResult: "qbHdLA6nhsuNTvPoWZZm5RHSfXcLerpHLd",
       },
       // native segwit
       {
-        policy: new DefaultWalletPolicy("wpkh(@0/**)", "[f5acc2fd/84'/1'/0']tpubDCtKfsNyRhULjZ9XMS4VKKtVcPdVDi8MKUbcSD9MJDyjRu1A2ND5MiipozyyspBT9bg8upEp7a8EAgFxNxXn1d7QkdbL52Ty5jiSLcxPt1P"),
+        policy: new DefaultWalletPolicy("wpkh(@0/**)", "[350a4bc9/84'/1'/0']tpubDCtKfsNyRhULjZ9XMS4VKKtVcPdVDi8MKUbcSD9MJDyjRu1A2ND5MiipozyyspBT9bg8upEp7a8EAgFxNxXn1d7QkdbL52Ty5jiSLcxPt1P"),
         change: 0,
         addrIndex: 0,
-        expResult: "tb1qzdr7s2sr0dwmkwx033r4nujzk86u0cy6fmzfjk",
+        expResult: "tq1qzdr7s2sr0dwmkwx033r4nujzk86u0cy6dcmgce",
       },
       {
-        policy: new DefaultWalletPolicy("wpkh(@0/**)", "[f5acc2fd/84'/1'/0']tpubDCtKfsNyRhULjZ9XMS4VKKtVcPdVDi8MKUbcSD9MJDyjRu1A2ND5MiipozyyspBT9bg8upEp7a8EAgFxNxXn1d7QkdbL52Ty5jiSLcxPt1P"),
+        policy: new DefaultWalletPolicy("wpkh(@0/**)", "[350a4bc9/84'/1'/0']tpubDCtKfsNyRhULjZ9XMS4VKKtVcPdVDi8MKUbcSD9MJDyjRu1A2ND5MiipozyyspBT9bg8upEp7a8EAgFxNxXn1d7QkdbL52Ty5jiSLcxPt1P"),
         change: 1,
         addrIndex: 15,
-        expResult: "tb1qlrvzyx8jcjfj2xuy69du9trtxnsvjuped7e289",
+        expResult: "tq1qlrvzyx8jcjfj2xuy69du9trtxnsvjupefaqtd2",
       },
       // wrapped segwit
       {
-        policy: new DefaultWalletPolicy("sh(wpkh(@0/**))", "[f5acc2fd/49'/1'/0']tpubDC871vGLAiKPcwAw22EjhKVLk5L98UGXBEcGR8gpcigLQVDDfgcYW24QBEyTHTSFEjgJgbaHU8CdRi9vmG4cPm1kPLmZhJEP17FMBdNheh3"),
+        policy: new DefaultWalletPolicy("sh(wpkh(@0/**))", "[350a4bc9/49'/1'/0']tpubDC871vGLAiKPcwAw22EjhKVLk5L98UGXBEcGR8gpcigLQVDDfgcYW24QBEyTHTSFEjgJgbaHU8CdRi9vmG4cPm1kPLmZhJEP17FMBdNheh3"),
         change: 0,
         addrIndex: 0,
-        expResult: "2MyHkbusvLomaarGYMqyq7q9pSBYJRwWcsw",
+        expResult: "mNDsvaF9HHvEFaH6FmLRR3kAJoPBD3XfdW",
       },
       {
-        policy: new DefaultWalletPolicy("sh(wpkh(@0/**))", "[f5acc2fd/49'/1'/0']tpubDC871vGLAiKPcwAw22EjhKVLk5L98UGXBEcGR8gpcigLQVDDfgcYW24QBEyTHTSFEjgJgbaHU8CdRi9vmG4cPm1kPLmZhJEP17FMBdNheh3"),
+        policy: new DefaultWalletPolicy("sh(wpkh(@0/**))", "[350a4bc9/49'/1'/0']tpubDC871vGLAiKPcwAw22EjhKVLk5L98UGXBEcGR8gpcigLQVDDfgcYW24QBEyTHTSFEjgJgbaHU8CdRi9vmG4cPm1kPLmZhJEP17FMBdNheh3"),
         change: 1,
         addrIndex: 15,
-        expResult: "2NAbM4FSeBQG4o85kbXw2YNfKypcnEZS9MR",
+        expResult: "mZXUNuos7tQiTr6JVTHcqbFfrSTf8zGzxx",
       },
       // taproot
       {
-        policy: new DefaultWalletPolicy("tr(@0/**)", "[f5acc2fd/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
+        policy: new DefaultWalletPolicy("tr(@0/**)", "[350a4bc9/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
         change: 0,
         addrIndex: 0,
-        expResult: "tb1pws8wvnj99ca6acf8kq7pjk7vyxknah0d9mexckh5s0vu2ccy68js9am6u7",
+        expResult: "tq1pws8wvnj99ca6acf8kq7pjk7vyxknah0d9mexckh5s0vu2ccy68jsk4ulph",
       },
       {
-        policy: new DefaultWalletPolicy("tr(@0/**)", "[f5acc2fd/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
+        policy: new DefaultWalletPolicy("tr(@0/**)", "[350a4bc9/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
         change: 0,
         addrIndex: 9,
-        expResult: "tb1psl7eyk2jyjzq6evqvan854fts7a5j65rth25yqahkd2a765yvj0qggs5ne",
+        expResult: "tq1psl7eyk2jyjzq6evqvan854fts7a5j65rth25yqahkd2a765yvj0qmqh3ws",
       },
       {
-        policy: new DefaultWalletPolicy("tr(@0/**)", "[f5acc2fd/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
+        policy: new DefaultWalletPolicy("tr(@0/**)", "[350a4bc9/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
         change: 1,
         addrIndex: 0,
-        expResult: "tb1pmr60r5vfjmdkrwcu4a2z8h39mzs7a6wf2rfhuml6qgcp940x9cxs7t9pdy",
+        expResult: "tq1pmr60r5vfjmdkrwcu4a2z8h39mzs7a6wf2rfhuml6qgcp940x9cxsdrzysd",
       },
       {
-        policy: new DefaultWalletPolicy("tr(@0/**)", "[f5acc2fd/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
+        policy: new DefaultWalletPolicy("tr(@0/**)", "[350a4bc9/86'/1'/0']tpubDDKYE6BREvDsSWMazgHoyQWiJwYaDDYPbCFjYxN3HFXJP5fokeiK4hwK5tTLBNEDBwrDXn8cQ4v9b2xdW62Xr5yxoQdMu1v6c7UDXYVH27U"),
         change: 1,
         addrIndex: 9,
-        expResult: "tb1p98d6s9jkf0la8ras4nnm72zme5r03fexn29e3pgz4qksdy84ndpqgjak72",
+        expResult: "tq1p98d6s9jkf0la8ras4nnm72zme5r03fexn29e3pgz4qksdy84ndpqm66nrr",
       },
       // multisig
       {
@@ -224,7 +224,7 @@ describe("test AppClient", () => {
           "wsh(sortedmulti(2,@0/**,@1/**))",
           [
             "[76223a6e/48'/1'/0'/2']tpubDE7NQymr4AFtewpAsWtnreyq9ghkzQBXpCZjWLFVRAvnbf7vya2eMTvT2fPapNqL8SuVvLQdbUbMfWLVDCZKnsEBqp6UK93QEzL8Ck23AwF",
-            "[f5acc2fd/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
+            "[350a4bc9/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
           ]
         ),
         change: 0,
@@ -247,7 +247,7 @@ describe("test AppClient", () => {
       "wsh(sortedmulti(2,@0/**,@1/**))",
       [
         "[76223a6e/48'/1'/0'/2']tpubDE7NQymr4AFtewpAsWtnreyq9ghkzQBXpCZjWLFVRAvnbf7vya2eMTvT2fPapNqL8SuVvLQdbUbMfWLVDCZKnsEBqp6UK93QEzL8Ck23AwF",
-        "[f5acc2fd/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
+        "[350a4bc9/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
       ]
     );
 
@@ -266,7 +266,7 @@ describe("test AppClient", () => {
       "wsh(thresh(3,pk(@0/**),s:pk(@1/**),s:pk(@2/**),sln:older(12960)))",
       [
         "[76223a6e/48'/1'/0'/2']tpubDE7NQymr4AFtewpAsWtnreyq9ghkzQBXpCZjWLFVRAvnbf7vya2eMTvT2fPapNqL8SuVvLQdbUbMfWLVDCZKnsEBqp6UK93QEzL8Ck23AwF",
-        "[f5acc2fd/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
+        "[350a4bc9/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
       ]
     );
 
@@ -291,7 +291,7 @@ describe("test AppClient", () => {
 
     const walletPolicy = new DefaultWalletPolicy(
       "wpkh(@0/**)",
-      "[f5acc2fd/84'/1'/0']tpubDCtKfsNyRhULjZ9XMS4VKKtVcPdVDi8MKUbcSD9MJDyjRu1A2ND5MiipozyyspBT9bg8upEp7a8EAgFxNxXn1d7QkdbL52Ty5jiSLcxPt1P"
+      "[350a4bc9/84'/1'/0']tpubDCtKfsNyRhULjZ9XMS4VKKtVcPdVDi8MKUbcSD9MJDyjRu1A2ND5MiipozyyspBT9bg8upEp7a8EAgFxNxXn1d7QkdbL52Ty5jiSLcxPt1P"
     );
 
     const psbt = new PsbtV2();
@@ -338,7 +338,7 @@ describe("test AppClient", () => {
       "tr(@0/**,pk(@1/**))",
       [
         "[76223a6e/48'/1'/0'/2']tpubDE7NQymr4AFtewpAsWtnreyq9ghkzQBXpCZjWLFVRAvnbf7vya2eMTvT2fPapNqL8SuVvLQdbUbMfWLVDCZKnsEBqp6UK93QEzL8Ck23AwF",
-        "[f5acc2fd/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
+        "[350a4bc9/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
       ]
     );
 
@@ -373,7 +373,7 @@ describe("test AppClient", () => {
       "tr(@0/**,pk(@1/**))",
       [
         "[76223a6e/48'/1'/0'/2']tpubDE7NQymr4AFtewpAsWtnreyq9ghkzQBXpCZjWLFVRAvnbf7vya2eMTvT2fPapNqL8SuVvLQdbUbMfWLVDCZKnsEBqp6UK93QEzL8Ck23AwF",
-        "[f5acc2fd/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
+        "[350a4bc9/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
       ]
     );
 
@@ -393,7 +393,7 @@ describe("test AppClient", () => {
       "tr(@0/**,pk(@1/**))",
       [
         "[76223a6e/48'/1'/0'/2']tpubDE7NQymr4AFtewpAsWtnreyq9ghkzQBXpCZjWLFVRAvnbf7vya2eMTvT2fPapNqL8SuVvLQdbUbMfWLVDCZKnsEBqp6UK93QEzL8Ck23AwF",
-        "[f5acc2fd/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
+        "[350a4bc9/48'/1'/0'/2']tpubDFAqEGNyad35aBCKUAXbQGDjdVhNueno5ZZVEn3sQbW5ci457gLR7HyTmHBg93oourBssgUxuWz1jX5uhc1qaqFo9VsybY1J5FuedLfm4dK",
       ]
     );
 
@@ -415,6 +415,6 @@ describe("test AppClient", () => {
     await setSpeculosAutomation(transport, automation);
 
     const result = await app.signMessage(Buffer.from(msg, "ascii"), path)
-    expect(result).toEqual("H4frM6TYm5ty1MAf9o/Zz9Qiy3VEldAYFY91SJ/5nYMAZY1UUB97fiRjKW8mJit2+V4OCa1YCqjDqyFnD9Fw75k=");
+    expect(result).toEqual("Hy8pZNerJksupNi/DR3IujV+iIWLOs/0L47P6AdcpJsmQjuMKWUj/4d2bTtc9xcIkz9+SrVSrDRk9bjKJqhJL/M=");
   });
 });
