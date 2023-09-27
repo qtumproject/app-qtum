@@ -483,13 +483,12 @@ void ui_display_output_address_amount_no_index_flow(int index) {
 }
 
 void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender) {
-    if(sign_sender) {
+    if (sign_sender) {
         ux_flow_init(0, ux_sign_sender_transaction_flow, NULL);
-    }
-    else {
+    } else {
         ux_flow_init(0,
-                 is_self_transfer ? ux_accept_selftransfer_flow : ux_accept_transaction_flow,
-                 NULL);
+                     is_self_transfer ? ux_accept_selftransfer_flow : ux_accept_transaction_flow,
+                     NULL);
     }
 }
 

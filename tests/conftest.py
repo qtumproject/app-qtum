@@ -17,10 +17,10 @@ random.seed(0)  # make sure tests are repeatable
 
 # Make sure that the native client library is used with, as speculos would otherwise
 # return a version number < 2.0.0 for the app
-os.environ['SPECULOS_APPNAME'] = f'Bitcoin Test:{get_app_version()}'
+os.environ['SPECULOS_APPNAME'] = f'Qtum Test:{get_app_version()}'
 
 
-BITCOIN_DIRNAME = os.getenv("BITCOIN_DIRNAME", ".test_bitcoin")
+BITCOIN_DIRNAME = os.getenv("BITCOIN_DIRNAME", ".test_qtum")
 
 
 rpc_url = "http://%s:%s@%s:%s" % (
@@ -68,9 +68,9 @@ def run_bitcoind():
     # Run bitcoind in a separate folder
     os.makedirs(BITCOIN_DIRNAME, exist_ok=True)
 
-    bitcoind = os.getenv("BITCOIND", "bitcoind")
+    bitcoind = os.getenv("BITCOIND", "qtumd")
 
-    shutil.copy(os.path.join(os.path.dirname(__file__), "bitcoin.conf"), BITCOIN_DIRNAME)
+    shutil.copy(os.path.join(os.path.dirname(__file__), "qtum.conf"), BITCOIN_DIRNAME)
     subprocess.Popen([bitcoind, f"--datadir={BITCOIN_DIRNAME}"])
 
     # Make sure the node is ready, and generate some initial blocks

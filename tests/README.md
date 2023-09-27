@@ -13,7 +13,7 @@ pip install -r requirements.txt
 Some tests require the `bitcoind 22.0` binary to be in the `$PATH` variable, or alternatively to be set as the `BITCOIND` environment variable in the shell running the tests:
 
 ```
-export BITCOIND=/path/to/my/bitcoind
+export BITCOIND=/path/to/my/qtumd
 ```
 
 ## Launch with Speculos

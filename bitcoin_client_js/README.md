@@ -1,8 +1,8 @@
-# Ledger Bitcoin application client
+# Ledger Qtum application client
 
 ## Overview
 
-TypeScript client for Ledger Bitcoin application. Supports versions 2.1.0 and above of the app.
+TypeScript client for Ledger Qtum application. Supports versions 2.1.0 and above of the app.
 
 Main repository and documentation: https://github.com/LedgerHQ/app-bitcoin-new
 
@@ -38,7 +38,7 @@ Testing the `signPsbt` method requires a valid PSBT, and provide the correspondi
 import { AppClient, DefaultWalletPolicy, WalletPolicy } from 'ledger-bitcoin';
 import Transport from '@ledgerhq/hw-transport-node-hid';
 
-// This examples assumes the Bitcoin Testnet app is running.
+// This examples assumes the Qtum Testnet app is running.
 // Make sure to use addresses compatible with mainnet otherwise, by using paths where the BIP-44 coin_type
 // is "0'" and not "1'".
 

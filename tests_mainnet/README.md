@@ -15,7 +15,7 @@ pip install -r requirements.txt
 Build the app as normal for mainnet from the root folder:
 
 ```
-COIN=bitcoin DEBUG=0 make
+COIN=qtum DEBUG=0 make
 ```
 
 Then run all the tests from this folder with:

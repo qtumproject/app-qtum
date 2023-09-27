@@ -152,7 +152,8 @@ void app_main() {
                 continue;
             }
             if (cmd.ins != GET_EXTENDED_PUBKEY && cmd.ins != GET_WALLET_ADDRESS &&
-                cmd.ins != SIGN_PSBT && cmd.ins != GET_MASTER_FINGERPRINT && cmd.ins != SIGN_SENDER_PSBT) {
+                cmd.ins != SIGN_PSBT && cmd.ins != GET_MASTER_FINGERPRINT &&
+                cmd.ins != SIGN_SENDER_PSBT) {
                 PRINTF(
                     "Only GET_EXTENDED_PUBKEY, GET_WALLET_ADDRESS, SIGN_PSBT, SIGN_SENDER_PSBT and "
                     "GET_MASTER_FINGERPRINT can be called during swap\n");
