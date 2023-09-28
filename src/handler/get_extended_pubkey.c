@@ -38,6 +38,13 @@ static bool is_path_safe_for_pubkey_export(const uint32_t bip32_path[],
     if (bip32_path_len == 2 && bip32_path[0] == (4541509 ^ H) &&
         bip32_path[1] == (1112098098 ^ H)) {
         return true;
+    } else if (bip32_path_len == 2 && bip32_path[0] == (0 ^ H) && bip32_path[1] == (45342 ^ H)) {
+        // Exception for "m/0h/45342h"
+        return true;
+    } else if (bip32_path_len == 3 && bip32_path[0] == (20698 ^ H) && bip32_path[1] == (3053 ^ H) &&
+               bip32_path[2] == (12648430 ^ H)) {
+        // Exception for "m/20698h/3053h/12648430h"
+        return true;
     }
 
     if (bip32_path_len < 3) {
