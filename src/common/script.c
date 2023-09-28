@@ -399,37 +399,6 @@ bool get_sender_sig(uint8_t *buffer, size_t size, uint8_t **sig, unsigned int *s
 #define ADD_DELEGATION_HASH    "\x4c\x0e\x96\x8c"
 #define REMOVE_DELEGATION_HASH "\x3d\x66\x6e\x8b"
 
-int16_t public_key_to_encoded_base58(uint8_t *in,
-                                     uint16_t inlen,
-                                     char *out,
-                                     size_t outlen,
-                                     uint16_t version,
-                                     uint8_t alreadyHashed) {
-    uint8_t tmpBuffer[34];
-
-    uint8_t versionSize = (version > 255 ? 2 : 1);
-    int outputLen = outlen;
-
-    if (!alreadyHashed) {
-        PRINTF("To hash\n%.*H\n", inlen, in);
-        crypto_hash160(in, inlen, tmpBuffer + versionSize);
-        PRINTF("Hash160\n%.*H\n", 20, (tmpBuffer + versionSize));
-        if (version > 255) {
-            tmpBuffer[0] = (version >> 8);
-            tmpBuffer[1] = version;
-        } else {
-            tmpBuffer[0] = version;
-        }
-    } else {
-        memmove(tmpBuffer, in, 20 + versionSize);
-    }
-
-    crypto_get_checksum(tmpBuffer, 20 + versionSize, tmpBuffer + 20 + versionSize);
-
-    outputLen = base58_encode_address(tmpBuffer, 24 + versionSize, out, outlen);
-    return (int16_t) outputLen;
-}
-
 bool opcall_addr_encode(const uint8_t script[],
                         size_t script_len,
                         char *out,
@@ -467,21 +436,18 @@ bool opcall_addr_encode(const uint8_t script[],
             functionhash[i] = script[pos + 1 + i];
         }
         if (strncmp(functionhash, ADD_DELEGATION_HASH, sizeof(functionhash)) == 0) {
-            uint8_t stakeraddress[21];
-            char stakerbase58[80];
+            uint8_t stakeraddress[20];
+            char stakerbase58[40];
             int16_t stakerbase58size;
             uint8_t delegationfee;
-            stakeraddress[0] = COIN_P2PKH_VERSION;
 
             for (i = 0; i < sizeof(stakeraddress); i++) {
-                stakeraddress[i + 1] = script[pos + 17 + i];
+                stakeraddress[i] = script[pos + 17 + i];
             }
-            stakerbase58size = public_key_to_encoded_base58(stakeraddress,
-                                                            sizeof(stakeraddress),
-                                                            stakerbase58,
-                                                            sizeof(stakerbase58),
-                                                            COIN_P2PKH_VERSION,
-                                                            1);
+            stakerbase58size = base58_encode_address(stakeraddress,
+                                                     COIN_P2PKH_VERSION,
+                                                     stakerbase58,
+                                                     sizeof(stakerbase58));
             if (stakerbase58size < 0) return 0;
             stakerbase58[stakerbase58size] = '\0';
 
