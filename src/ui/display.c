@@ -172,8 +172,10 @@ bool ui_warn_nondefault_sighash(dispatcher_context_t *context) {
     return io_ui_process(context, true);
 }
 
-bool ui_transaction_prompt(dispatcher_context_t *context, const int external_outputs_total_count) {
-    ui_display_transaction_prompt(external_outputs_total_count);
+bool ui_transaction_prompt(dispatcher_context_t *context,
+                           const int external_outputs_total_count,
+                           const bool sign_sender) {
+    ui_display_transaction_prompt(external_outputs_total_count, sign_sender);
     return io_ui_process(context, true);
 }
 

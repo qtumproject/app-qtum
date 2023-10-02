@@ -16,6 +16,7 @@ typedef struct {
     nbgl_pageInfoLongPress_t infoLongPress;
     int extOutputCount;
     int currentOutput;
+    bool signSender;
 } TransactionContext_t;
 
 enum {
@@ -24,6 +25,8 @@ enum {
     SILENT_CONFIRM_TOKEN,
     BACK_TOKEN_TRANSACTION,   // for most transactions
     BACK_TOKEN_SELFTRANSFER,  // special case when it's a self-transfer (no external outputs)
+    BACK_TOKEN_TRANSACTION_SENDER,
+    BACK_TOKEN_SELFTRANSFER_SENDER,
 };
 
 extern bool G_was_processing_screen_shown;
@@ -98,6 +101,12 @@ static void transaction_confirm_callback(int token, uint8_t index) {
         case BACK_TOKEN_SELFTRANSFER:
             ui_accept_transaction_flow(true, false);
             break;
+        case BACK_TOKEN_TRANSACTION_SENDER:
+            ui_accept_transaction_flow(false, true);
+            break;
+        case BACK_TOKEN_SELFTRANSFER_SENDER:
+            ui_accept_transaction_flow(true, true);
+            break;
         default:
             PRINTF("Unhandled token : %d", token);
     }
@@ -156,6 +165,9 @@ static void transaction_confirm(int token, uint8_t index) {
     // If it's a self-transfer, the UX is slightly different
     int backToken =
         transactionContext.extOutputCount == 0 ? BACK_TOKEN_SELFTRANSFER : BACK_TOKEN_TRANSACTION;
+    if (transactionContext.signSender)
+        backToken = transactionContext.extOutputCount == 0 ? BACK_TOKEN_SELFTRANSFER_SENDER
+                                                           : BACK_TOKEN_TRANSACTION_SENDER;
 
     if (token == CONFIRM_TOKEN) {
         nbgl_pageNavigationInfo_t info = {.activePage = transactionContext.extOutputCount + 1,
@@ -185,7 +197,12 @@ static void transaction_confirm(int token, uint8_t index) {
 
 void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender) {
     UNUSED(sign_sender);
-    if (!is_self_transfer) {
+    if (sign_sender) {
+        transactionContext.tagValuePair[0].item = "Type";
+        transactionContext.tagValuePair[0].value = "OP_SENDER";
+
+        transactionContext.tagValueList.nbPairs = 1;
+    } else if (!is_self_transfer) {
         transactionContext.tagValuePair[0].item = "Fees";
         transactionContext.tagValuePair[0].value = g_ui_state.validate_transaction.fee;
 
@@ -199,7 +216,8 @@ void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender) {
         transactionContext.tagValueList.nbPairs = 2;
     }
 
-    transactionContext.confirm = "Sign transaction\nto send Bitcoin?";
+    transactionContext.confirm =
+        sign_sender ? "Sign sender\nfor contract?" : "Sign transaction\nto send Qtum?";
     transactionContext.confirmed_status = "TRANSACTION\nSIGNED";
     transactionContext.rejected_status = "Transaction rejected";
 
@@ -222,18 +240,20 @@ void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender) {
     nbgl_refresh();
 }
 
-void ui_display_transaction_prompt(const int external_outputs_total_count) {
+void ui_display_transaction_prompt(const int external_outputs_total_count, const bool sign_sender) {
     transactionContext.currentOutput = 0;
     transactionContext.extOutputCount = external_outputs_total_count;
+    transactionContext.signSender = sign_sender;
 
     transactionContext.rejected_status = "Transaction rejected";
 
-    nbgl_useCaseReviewStart(&C_Bitcoin_64px,
-                            "Review transaction\nto send Bitcoin",
-                            "",
-                            "Reject transaction",
-                            ux_flow_response_true,
-                            confirm_cancel);
+    nbgl_useCaseReviewStart(
+        &C_Bitcoin_64px,
+        sign_sender ? "Review contract\ntransaction" : "Review transaction\nto send Qtum",
+        "",
+        "Reject transaction",
+        ux_flow_response_true,
+        confirm_cancel);
 }
 
 // Display outputs
@@ -461,7 +481,7 @@ void ui_display_canonical_wallet_address_flow(void) {
     transactionContext.rejected_status = "Address verification\ncancelled";
 
     nbgl_useCaseReviewStart(&C_Bitcoin_64px,
-                            "Verify Bitcoin\naddress",
+                            "Verify Qtum\naddress",
                             "",
                             "Cancel",
                             address_display,
