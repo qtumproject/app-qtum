@@ -169,7 +169,7 @@ void ui_display_output_address_amount_no_index_flow(int index);
 
 void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender);
 
-void ui_display_transaction_prompt(const int external_outputs_total_count);
+void ui_display_transaction_prompt(const int external_outputs_total_count, const bool sign_sender);
 
 bool ui_post_processing_confirm_wallet_registration(dispatcher_context_t *context, bool success);
 
@@ -180,7 +180,9 @@ bool ui_post_processing_confirm_transaction(dispatcher_context_t *context, bool 
 bool ui_post_processing_confirm_message(dispatcher_context_t *context, bool success);
 
 #ifdef HAVE_NBGL
-bool ui_transaction_prompt(dispatcher_context_t *context, const int external_outputs_total_count);
+bool ui_transaction_prompt(dispatcher_context_t *context,
+                           const int external_outputs_total_count,
+                           bool sign_sender);
 void ui_display_post_processing_confirm_message(bool success);
 void ui_display_post_processing_confirm_wallet_registation(bool success);
 void ui_display_post_processing_confirm_transaction(bool success);

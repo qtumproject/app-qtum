@@ -1514,7 +1514,7 @@ static bool __attribute__((noinline)) process_outputs(dispatcher_context_t *dc,
 
     if (!read_outputs(dc, st, &placeholder_info, true, 0, 0, 0)) return false;
 
-    if (!ui_transaction_prompt(dc, st->outputs.n_external)) {
+    if (!ui_transaction_prompt(dc, st->outputs.n_external, hash != 0)) {
         SEND_SW(dc, SW_DENY);
         return false;
     }
