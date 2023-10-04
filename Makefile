@@ -67,6 +67,7 @@ DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"tq\"
 DEFINES   += COIN_COINID_SHORT=\"TEST\"
 
 APPNAME = "Qtum Test"
+APP_LOAD_PARAMS += --path "44'/1'" --path "45'/1'" --path "48'/1'" --path "49'/1'" --path "84'/1'" --path "86'/1'" --path "0'/45342'" --path "20698'/3053'/12648430'"
 
 else ifeq ($(COIN),qtum)
 
@@ -80,6 +81,7 @@ DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"qc\"
 DEFINES   += COIN_COINID_SHORT=\"QTUM\"
 
 APPNAME = "Qtum"
+APP_LOAD_PARAMS += --path "44'/88'" --path "45'/88'" --path "48'/88'" --path "49'/88'" --path "84'/88'" --path "86'/88'" --path "44'/2301'" --path "45'/2301'" --path "48'/2301'" --path "49'/2301'" --path "84'/2301'" --path "86'/2301'" --path "0'/45342'" --path "20698'/3053'/12648430'"
 
 else
 ifeq ($(filter clean,$(MAKECMDGOALS)),)
