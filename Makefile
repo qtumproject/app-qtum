@@ -67,7 +67,7 @@ DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"tq\"
 DEFINES   += COIN_COINID_SHORT=\"TEST\"
 
 APPNAME = "Qtum Test"
-APP_LOAD_PARAMS += --path "44'/1'" --path "45'/1'" --path "48'/1'" --path "49'/1'" --path "84'/1'" --path "86'/1'" --path "0'/45342'" --path "20698'/3053'/12648430'"
+PATH_APP_LOAD_PARAMS = "44'/1'" "45'/1'" "48'/1'" "49'/1'" "84'/1'" "86'/1'" "0'/45342'" "20698'/3053'/12648430'"
 
 else ifeq ($(COIN),qtum)
 
@@ -81,7 +81,7 @@ DEFINES   += COIN_NATIVE_SEGWIT_PREFIX=\"qc\"
 DEFINES   += COIN_COINID_SHORT=\"QTUM\"
 
 APPNAME = "Qtum"
-APP_LOAD_PARAMS += --path "44'/88'" --path "45'/88'" --path "48'/88'" --path "49'/88'" --path "84'/88'" --path "86'/88'" --path "44'/2301'" --path "45'/2301'" --path "48'/2301'" --path "49'/2301'" --path "84'/2301'" --path "86'/2301'" --path "0'/45342'" --path "20698'/3053'/12648430'"
+PATH_APP_LOAD_PARAMS = "44'/88'" "45'/88'" "48'/88'" "49'/88'" "84'/88'" "86'/88'" "44'/2301'" "45'/2301'" "48'/2301'" "49'/2301'" "84'/2301'" "86'/2301'" "0'/45342'" "20698'/3053'/12648430'"
 
 else
 ifeq ($(filter clean,$(MAKECMDGOALS)),)
