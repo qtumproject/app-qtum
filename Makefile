@@ -21,6 +21,8 @@ endif
 
 include $(BOLOS_SDK)/Makefile.defines
 
+ENABLE_PENDING_REVIEW_SCREEN = 1
+
 # TODO: compile with the right path restrictions
 
 # Application allowed derivation curves.
