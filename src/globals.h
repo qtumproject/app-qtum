@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "ux.h"
 
@@ -27,3 +28,14 @@ extern ux_state_t G_ux;
  * Global structure with the parameters to exchange with the BOLOS UX application.
  */
 extern bolos_ux_params_t G_ux_params;
+
+#define N_storage (*(volatile internalStorage_t *) PIC(&N_storage_real))
+typedef struct internalStorage_t {
+    bool dataAllowed;
+    bool initialized;
+} internalStorage_t;
+
+/**
+ * Global structure for settings storage.
+ */
+extern const internalStorage_t N_storage_real;

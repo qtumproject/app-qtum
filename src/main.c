@@ -67,6 +67,8 @@ bolos_ux_params_t G_ux_params;
 
 dispatcher_context_t G_dispatcher_context;
 
+const internalStorage_t N_storage_real;
+
 // clang-format off
 const command_descriptor_t COMMAND_DESCRIPTORS[] = {
     {
@@ -236,6 +238,17 @@ void coin_main() {
                 G_io_app.plane_mode = os_setting_get(OS_SETTING_PLANEMODE, NULL, 0);
 #endif  // HAVE_BLE
 
+                if (!N_storage.initialized) {
+                    internalStorage_t storage;
+#ifdef HAVE_ALLOW_DATA
+                    storage.dataAllowed = true;
+#else
+                    storage.dataAllowed = false;
+#endif
+                    storage.initialized = true;
+                    nvm_write((void *) &N_storage, (void *) &storage, sizeof(internalStorage_t));
+                }
+
                 USB_power(0);
                 USB_power(1);
 
@@ -288,6 +301,17 @@ static void swap_library_main_helper(struct libargs_s *args) {
                 UX_INIT();
                 ux_stack_push();
 #endif  // HAVE_BAGL
+
+                if (!N_storage.initialized) {
+                    internalStorage_t storage;
+#ifdef HAVE_ALLOW_DATA
+                    storage.dataAllowed = true;
+#else
+                    storage.dataAllowed = false;
+#endif
+                    storage.initialized = true;
+                    nvm_write((void *) &N_storage, (void *) &storage, sizeof(internalStorage_t));
+                }
 
                 USB_power(0);
                 USB_power(1);

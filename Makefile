@@ -55,6 +55,12 @@ HAVE_APPLICATION_FLAG_GLOBAL_PIN = 1
 HAVE_APPLICATION_FLAG_BOLOS_SETTINGS = 1
 HAVE_APPLICATION_FLAG_LIBRARY = 1
 
+# Enables direct data signing without having to specify it in the settings.
+ALLOW_DATA?=0
+ifneq ($(ALLOW_DATA),0)
+DEFINES += HAVE_ALLOW_DATA
+endif
+
 ifeq ($(COIN),qtum_testnet)
 
 # Qtum testnet, no legacy support
