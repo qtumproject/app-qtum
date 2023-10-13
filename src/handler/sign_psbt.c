@@ -1370,6 +1370,7 @@ static bool read_outputs(dispatcher_context_t *dc,
         output_info_t output;
         memset(&output, 0, sizeof(output));
         bool isOpSender = false;
+        bool isContract = false;
 
         output_keys_callback_data_t callback_data = {.output = &output,
                                                      .placeholder_info = placeholder_info};
@@ -1437,6 +1438,14 @@ static bool read_outputs(dispatcher_context_t *dc,
         } else if (is_internal == 0) {
             // external output, user needs to validate
             ++external_outputs_count;
+
+            // check if output contract data is allowed
+            isContract = is_contract(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len);
+            if(isContract && !N_storage.dataAllowed) {
+                ui_warn_contract_data(dc);
+                SEND_SW(dc, SW_SIGNATURE_FAIL);
+                return false;
+            }
 
             if (!dry_run &&
                 !display_output(dc, st, cur_output_index, external_outputs_count, &output))

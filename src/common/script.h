@@ -182,6 +182,8 @@ bool is_opcall(const uint8_t script[], size_t script_len);
 
 bool is_opsender(const uint8_t script[], size_t script_len);
 
+bool is_contract(const uint8_t script[], size_t script_len);
+
 /**
  * Returns the size in bytes of the minimal push opcode for <n>, where n a uint32_t.
  */

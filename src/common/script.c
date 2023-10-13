@@ -379,6 +379,10 @@ bool is_opsender(const uint8_t script[], size_t script_len) {
     return is_opcontract((uint8_t *) script, script_len, OP_SENDER);
 }
 
+bool is_contract(const uint8_t script[], size_t script_len) {
+    return is_opcreate(script, script_len) || is_opcall(script, script_len);
+}
+
 bool get_script_sender_address(uint8_t *buffer, size_t size, uint8_t *script) {
     uint8_t *pkh = 0;
     unsigned int pkhSize = 0;

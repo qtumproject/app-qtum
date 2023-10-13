@@ -172,6 +172,11 @@ bool ui_warn_nondefault_sighash(dispatcher_context_t *context) {
     return io_ui_process(context, true);
 }
 
+bool ui_warn_contract_data(dispatcher_context_t *context) {
+    ui_warning_contract_data();
+    return io_ui_process(context, true);
+}
+
 bool ui_transaction_prompt(dispatcher_context_t *context,
                            const int external_outputs_total_count,
                            const bool sign_sender) {

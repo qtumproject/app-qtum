@@ -247,6 +247,27 @@ UX_STEP_CB(ux_sign_message_accept_new,
            set_ux_flow_response(true),
            {&C_icon_validate_14, "Sign", "message"});
 
+#ifdef TARGET_NANOS
+UX_STEP_CB(
+    ux_warning_contract_data_step,
+    bnnn_paging,
+    set_ux_flow_response(false),
+    {
+      "Error",
+      "Blind signing must be enabled in Settings",
+    });
+#else
+UX_STEP_CB(
+    ux_warning_contract_data_step,
+    pnn,
+    set_ux_flow_response(false),
+    {
+      &C_icon_crossmark,
+      "Blind signing must be",
+      "enabled in Settings",
+    });
+#endif
+
 // FLOW to display BIP32 path and a message hash to sign:
 // #1 screen: certificate icon + "Sign message"
 // #2 screen: display BIP32 Path
@@ -424,6 +445,8 @@ UX_FLOW(ux_sign_sender_transaction_flow,
         &ux_sign_sender_step,
         &ux_display_reject_step);
 
+UX_FLOW(ux_warning_contract_data_flow, &ux_warning_contract_data_step);
+
 void ui_display_pubkey_flow(void) {
     ux_flow_init(0, ux_display_pubkey_flow, NULL);
 }
@@ -490,6 +513,10 @@ void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender) {
                      is_self_transfer ? ux_accept_selftransfer_flow : ux_accept_transaction_flow,
                      NULL);
     }
+}
+
+void ui_warning_contract_data(void) {
+    ux_flow_init(0, ux_warning_contract_data_flow, NULL);
 }
 
 #endif  // HAVE_BAGL

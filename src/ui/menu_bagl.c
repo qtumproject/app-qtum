@@ -137,4 +137,5 @@ static void toggle_setting(volatile bool* setting, const ux_flow_step_t* ui_step
 static void switch_settings_blind_signing(void) {
     toggle_setting(&N_storage.dataAllowed, &ux_settings_flow_blind_signing_step);
 }
+
 #endif  // HAVE_BAGL
