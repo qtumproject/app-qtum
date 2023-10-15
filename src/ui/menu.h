@@ -19,3 +19,8 @@ void ui_menu_main_flow_bitcoin(void);
  * Show main menu for Testnet (ready screen, version, about, quit).
  */
 void ui_menu_main_flow_bitcoin_testnet(void);
+
+/**
+ * Show settings submenu
+ */
+void ui_menu_settings(void);

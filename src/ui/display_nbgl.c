@@ -549,4 +549,21 @@ void ui_display_post_processing_confirm_wallet_spend(bool success) {
     }
 }
 
+static void ui_warning_contract_data_choice(bool confirm) {
+    if (confirm) {
+        ux_flow_response_false();
+    } else {
+        ui_menu_settings();
+    }
+}
+
+void ui_warning_contract_data(void) {
+    nbgl_useCaseChoice(&C_round_warning_64px,
+                       "This message cannot\nbe clear-signed",
+                       "Enable blind-signing in\nthe settings to sign\nthis transaction.",
+                       "Exit",
+                       "Go to settings",
+                       ui_warning_contract_data_choice);
+}
+
 #endif  // HAVE_NBGL

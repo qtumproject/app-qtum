@@ -15,6 +15,11 @@
 #include "../crypto.h"
 #endif
 
+#ifndef SKIP_FOR_CMOCKA
+#define DELEGATIONS_ADDRESS    "\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x86"
+#define ADD_DELEGATION_HASH    "\x4c\x0e\x96\x8c"
+#define REMOVE_DELEGATION_HASH "\x3d\x66\x6e\x8b"
+
 size_t get_push_script_size(uint32_t n) {
     if (n <= 16)
         return 1;  // OP_0 and OP_1 .. OP_16
@@ -379,8 +384,18 @@ bool is_opsender(const uint8_t script[], size_t script_len) {
     return is_opcontract((uint8_t *) script, script_len, OP_SENDER);
 }
 
-bool is_contract(const uint8_t script[], size_t script_len) {
-    return is_opcreate(script, script_len) || is_opcall(script, script_len);
+bool is_delegate(const uint8_t script[], size_t script_len) {
+    char contractaddress[20];
+    size_t i;
+    for (i = 0; i < sizeof(contractaddress); i++) {
+        contractaddress[i] = script[script_len - 21 + i];
+    }
+    return strncmp(contractaddress, DELEGATIONS_ADDRESS, sizeof(contractaddress)) == 0;
+}
+
+bool is_contract_blind_sign(const uint8_t script[], size_t script_len) {
+    bool isContract = is_opcreate(script, script_len) || is_opcall(script, script_len);
+    return isContract && !is_delegate(script, script_len);
 }
 
 bool get_script_sender_address(uint8_t *buffer, size_t size, uint8_t *script) {
@@ -397,11 +412,6 @@ bool get_sender_sig(uint8_t *buffer, size_t size, uint8_t **sig, unsigned int *s
     return find_script_data(buffer, size, 3, HAVE_SCRIPT_SIZE, sig, sigSize) && *sig != 0 &&
            *sigSize > 0;
 }
-
-#ifndef SKIP_FOR_CMOCKA
-#define DELEGATIONS_ADDRESS    "\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x86"
-#define ADD_DELEGATION_HASH    "\x4c\x0e\x96\x8c"
-#define REMOVE_DELEGATION_HASH "\x3d\x66\x6e\x8b"
 
 bool opcall_addr_encode(const uint8_t script[],
                         size_t script_len,
@@ -459,6 +469,8 @@ bool opcall_addr_encode(const uint8_t script[],
             snprintf(out, out_len, "Delegate to %s (fee %d %%)", stakerbase58, delegationfee);
         } else if (strncmp(functionhash, REMOVE_DELEGATION_HASH, sizeof(functionhash)) == 0) {
             strncpy(out, "Undelegate", out_len);
+        } else {
+            return 0;
         }
     } else {
         uint8_t contractaddressstring[41];
