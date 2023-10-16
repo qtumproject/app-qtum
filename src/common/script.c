@@ -15,7 +15,6 @@
 #include "../crypto.h"
 #endif
 
-#ifndef SKIP_FOR_CMOCKA
 #define DELEGATIONS_ADDRESS    "\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x86"
 #define ADD_DELEGATION_HASH    "\x4c\x0e\x96\x8c"
 #define REMOVE_DELEGATION_HASH "\x3d\x66\x6e\x8b"
@@ -413,6 +412,7 @@ bool get_sender_sig(uint8_t *buffer, size_t size, uint8_t **sig, unsigned int *s
            *sigSize > 0;
 }
 
+#ifndef SKIP_FOR_CMOCKA
 bool opcall_addr_encode(const uint8_t script[],
                         size_t script_len,
                         char *out,

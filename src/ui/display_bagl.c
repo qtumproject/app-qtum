@@ -248,24 +248,22 @@ UX_STEP_CB(ux_sign_message_accept_new,
            {&C_icon_validate_14, "Sign", "message"});
 
 #ifdef TARGET_NANOS
-UX_STEP_CB(
-    ux_warning_contract_data_step,
-    bnnn_paging,
-    set_ux_flow_response(false),
-    {
-      "Error",
-      "Blind signing must be enabled in Settings",
-    });
+UX_STEP_CB(ux_warning_contract_data_step,
+           bnnn_paging,
+           set_ux_flow_response(false),
+           {
+               "Error",
+               "Blind signing must be enabled in Settings",
+           });
 #else
-UX_STEP_CB(
-    ux_warning_contract_data_step,
-    pnn,
-    set_ux_flow_response(false),
-    {
-      &C_icon_crossmark,
-      "Blind signing must be",
-      "enabled in Settings",
-    });
+UX_STEP_CB(ux_warning_contract_data_step,
+           pnn,
+           set_ux_flow_response(false),
+           {
+               &C_icon_crossmark,
+               "Blind signing must be",
+               "enabled in Settings",
+           });
 #endif
 
 // FLOW to display BIP32 path and a message hash to sign:

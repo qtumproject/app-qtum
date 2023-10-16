@@ -101,6 +101,12 @@ void settings_call_back(void) {
 }
 
 void ui_menu_settings(void) {
-    nbgl_useCaseSettings("Qtum", 1, 2, false, settings_call_back, navigation_cb, controls_call_back);
+    nbgl_useCaseSettings("Qtum",
+                         1,
+                         2,
+                         false,
+                         settings_call_back,
+                         navigation_cb,
+                         controls_call_back);
 }
 #endif  // HAVE_NBGL

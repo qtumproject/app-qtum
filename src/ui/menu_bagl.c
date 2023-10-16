@@ -34,7 +34,7 @@ UX_STEP_NOCB(ux_menu_ready_step_bitcoin_testnet,
 
 UX_STEP_NOCB(ux_menu_version_step, bn, {"Version", APPVERSION});
 UX_STEP_CB(ux_menu_about_step, pb, ui_menu_about(), {&C_icon_certificate, "About"});
-UX_STEP_CB(ux_menu_settings_step, pb, ui_menu_settings(), {&C_icon_eye,"Settings"});
+UX_STEP_CB(ux_menu_settings_step, pb, ui_menu_settings(), {&C_icon_eye, "Settings"});
 UX_STEP_VALID(ux_menu_exit_step, pb, os_sched_exit(-1), {&C_icon_dashboard_x, "Quit"});
 
 // FLOW for the main menu (for bitcoin):
@@ -99,8 +99,8 @@ void ui_menu_settings(void) {
 #define DISABLED_STR  "Disabled"
 #define BUF_INCREMENT (MAX(strlen(ENABLED_STR), strlen(DISABLED_STR)) + 1)
 char strings[BUF_INCREMENT];
-#define SETTING_BLIND_SIGNING_STATE       strings
-#define BOOL_TO_STATE_STR(b) (b ? ENABLED_STR : DISABLED_STR)
+#define SETTING_BLIND_SIGNING_STATE strings
+#define BOOL_TO_STATE_STR(b)        (b ? ENABLED_STR : DISABLED_STR)
 
 // clang-format off
 UX_STEP_CB(

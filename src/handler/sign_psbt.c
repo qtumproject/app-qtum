@@ -1439,10 +1439,11 @@ static bool read_outputs(dispatcher_context_t *dc,
             ++external_outputs_count;
 
             // check if output contract data is allowed
-            bool isContractBlindSign = is_contract_blind_sign(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len);
-            if(isContractBlindSign && !N_storage.dataAllowed) {
+            bool isContractBlindSign =
+                is_contract_blind_sign(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len);
+            if (isContractBlindSign && !N_storage.dataAllowed) {
                 ui_warn_contract_data(dc);
-                if(!N_storage.dataAllowed) {
+                if (!N_storage.dataAllowed) {
                     SEND_SW(dc, SW_SIGNATURE_FAIL);
                     return false;
                 }
