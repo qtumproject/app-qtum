@@ -263,3 +263,5 @@ bool opcall_addr_encode(const uint8_t script[],
                         size_t out_len,
                         bool isOpSender);
 #endif
+
+bool get_delegate_data(char *out, size_t out_len, char *stakerFee);

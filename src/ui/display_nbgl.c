@@ -6,12 +6,13 @@
 #include "./display.h"
 #include "./menu.h"
 #include "io.h"
+#include "../common/script.h"
 
 typedef struct {
     const char *confirm;           // text displayed in last transaction page
     const char *confirmed_status;  // text displayed in confirmation page (after long press)
     const char *rejected_status;   // text displayed in rejection page (after reject confirmed)
-    nbgl_layoutTagValue_t tagValuePair[3];
+    nbgl_layoutTagValue_t tagValuePair[4];
     nbgl_layoutTagValueList_t tagValueList;
     nbgl_pageInfoLongPress_t infoLongPress;
     int extOutputCount;
@@ -308,10 +309,23 @@ void ui_display_output_address_amount_flow(int index) {
     transactionContext.tagValuePair[1].item = "Amount";
     transactionContext.tagValuePair[1].value = g_ui_state.validate_output.amount;
 
-    transactionContext.tagValuePair[2].item = "Address";
-    transactionContext.tagValuePair[2].value = g_ui_state.validate_output.address_or_description;
+    size_t out_len = MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT);
+    bool hasDelegate = get_delegate_data(g_ui_state.validate_output.address_or_description,
+                                         out_len,
+                                         g_ui_state.validate_output.staker_fee);
+    if (hasDelegate) {
+        transactionContext.tagValuePair[2].item = "Delegate to";
+        transactionContext.tagValuePair[2].value =
+            g_ui_state.validate_output.address_or_description;
+        transactionContext.tagValuePair[3].item = "Fee";
+        transactionContext.tagValuePair[3].value = g_ui_state.validate_output.staker_fee;
+    } else {
+        transactionContext.tagValuePair[2].item = "Address";
+        transactionContext.tagValuePair[2].value =
+            g_ui_state.validate_output.address_or_description;
+    }
 
-    transactionContext.tagValueList.nbPairs = 3;
+    transactionContext.tagValueList.nbPairs = hasDelegate ? 4 : 3;
 
     display_output();
 }
@@ -323,10 +337,23 @@ void ui_display_output_address_amount_no_index_flow(int index) {
     transactionContext.tagValuePair[0].item = "Amount";
     transactionContext.tagValuePair[0].value = g_ui_state.validate_output.amount;
 
-    transactionContext.tagValuePair[1].item = "Address";
-    transactionContext.tagValuePair[1].value = g_ui_state.validate_output.address_or_description;
+    size_t out_len = MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT);
+    bool hasDelegate = get_delegate_data(g_ui_state.validate_output.address_or_description,
+                                         out_len,
+                                         g_ui_state.validate_output.staker_fee);
+    if (hasDelegate) {
+        transactionContext.tagValuePair[1].item = "Delegate to";
+        transactionContext.tagValuePair[1].value =
+            g_ui_state.validate_output.address_or_description;
+        transactionContext.tagValuePair[2].item = "Fee";
+        transactionContext.tagValuePair[2].value = g_ui_state.validate_output.staker_fee;
+    } else {
+        transactionContext.tagValuePair[1].item = "Address";
+        transactionContext.tagValuePair[1].value =
+            g_ui_state.validate_output.address_or_description;
+    }
 
-    transactionContext.tagValueList.nbPairs = 2;
+    transactionContext.tagValueList.nbPairs = hasDelegate ? 3 : 2;
 
     display_output();
 }
