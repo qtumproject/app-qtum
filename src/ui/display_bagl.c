@@ -167,6 +167,20 @@ UX_STEP_NOCB(ux_validate_address_step,
                  .text = g_ui_state.validate_output.address_or_description,
              });
 
+UX_STEP_NOCB(ux_validate_delegate_to_step,
+             bnnn_paging,
+             {
+                 .title = "Delegate to",
+                 .text = g_ui_state.validate_output.address_or_description,
+             });
+
+UX_STEP_NOCB(ux_validate_staker_fee_step,
+             bnnn_paging,
+             {
+                 .title = "Fee",
+                 .text = g_ui_state.validate_output.staker_fee,
+             });
+
 UX_STEP_NOCB(ux_confirm_transaction_step, pnn, {&C_icon_eye, "Confirm", "transaction"});
 UX_STEP_NOCB(ux_confirm_selftransfer_step, pnn, {&C_icon_eye, "Confirm", "self-transfer"});
 UX_STEP_NOCB(ux_confirm_transaction_fees_step,
@@ -410,6 +424,21 @@ UX_FLOW(ux_display_output_address_amount_flow,
         &ux_display_approve_step,
         &ux_display_reject_step);
 
+// FLOW to validate a single delegate output
+// #1 screen: eye icon + "Review" + index of output to validate
+// #2 screen: output amount
+// #3 screen: output staker address
+// #4 screen: output staker fee
+// #5 screen: approve button
+// #6 screen: reject button
+UX_FLOW(ux_display_output_delegate_flow,
+        &ux_review_step,
+        &ux_validate_amount_step,
+        &ux_validate_delegate_to_step,
+        &ux_validate_staker_fee_step,
+        &ux_display_approve_step,
+        &ux_display_reject_step);
+
 // Finalize see the transaction fees and finally accept signing
 // #1 screen: eye icon + "Confirm transaction"
 // #2 screen: fee amount
@@ -494,7 +523,15 @@ void ui_display_output_address_amount_flow(int index) {
              sizeof(g_ui_state.validate_output.index),
              "output #%d",
              index);
-    ux_flow_init(0, ux_display_output_address_amount_flow, NULL);
+    size_t out_len = MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT);
+    bool hasDelegate = get_delegate_data(g_ui_state.validate_output.address_or_description,
+                                         out_len,
+                                         g_ui_state.validate_output.staker_fee);
+    if (hasDelegate) {
+        ux_flow_init(0, ux_display_output_delegate_flow, NULL);
+    } else {
+        ux_flow_init(0, ux_display_output_address_amount_flow, NULL);
+    }
 }
 
 void ui_display_output_address_amount_no_index_flow(int index) {
