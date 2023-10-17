@@ -158,6 +158,21 @@ static void continue_callback(void) {
                              start_processing_callback);
 }
 
+static void sign_message_callback(void) {
+    transactionContext.tagValueList.pairs = transactionContext.tagValuePair;
+
+    transactionContext.infoLongPress.icon = &C_Bitcoin_64px;
+    transactionContext.infoLongPress.longPressText = "Hold to sign";
+    transactionContext.infoLongPress.longPressToken = CONFIRM_TOKEN;
+    transactionContext.infoLongPress.tuneId = TUNE_TAP_CASUAL;
+    transactionContext.infoLongPress.text = transactionContext.confirm;
+
+    nbgl_useCaseStaticReview(&transactionContext.tagValueList,
+                             &transactionContext.infoLongPress,
+                             "Reject",
+                             start_processing_callback);
+}
+
 // Transaction flow
 static void transaction_confirm(int token, uint8_t index) {
     (void) index;
@@ -440,15 +455,15 @@ void ui_sign_message_flow(void) {
 
     transactionContext.tagValueList.nbPairs = 2;
 
-    transactionContext.confirm = "Sign Message";
+    transactionContext.confirm = "Sign Message?";
     transactionContext.confirmed_status = "MESSAGE\nSIGNED";
     transactionContext.rejected_status = "Message rejected";
 
     nbgl_useCaseReviewStart(&C_Bitcoin_64px,
-                            "Confirm signature",
+                            "Review message",
                             "",
-                            "Cancel",
-                            continue_callback,
+                            "Reject",
+                            sign_message_callback,
                             ux_flow_response_false);
 }
 
