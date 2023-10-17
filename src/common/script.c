@@ -418,6 +418,7 @@ bool opcall_addr_encode(const uint8_t script[],
                         char *out,
                         size_t out_len,
                         bool isOpSender) {
+    memset(out, 0, out_len);
     char contractaddress[20];
     size_t i;
     int pos = 0;
@@ -466,7 +467,7 @@ bool opcall_addr_encode(const uint8_t script[],
             stakerbase58[stakerbase58size] = '\0';
 
             delegationfee = script[pos + 17 + 20 + 31];
-            snprintf(out, out_len, "Delegate to %s (fee %d %%)", stakerbase58, delegationfee);
+            snprintf(out, out_len, "%s;;%d %%", stakerbase58, delegationfee);
         } else if (strncmp(functionhash, REMOVE_DELEGATION_HASH, sizeof(functionhash)) == 0) {
             strncpy(out, "Undelegate", out_len);
         } else {
@@ -486,3 +487,24 @@ bool opcall_addr_encode(const uint8_t script[],
     return 1;
 }
 #endif
+
+bool get_delegate_data(char *out, size_t out_len, char *stakerFee) {
+    size_t i = 0;
+    for (; i < out_len - 1; i++) {
+        if ((out[i] == ';' && out[i + 1] == ';') || (out[i] == 0 && out[i + 1] == ';')) {
+            out[i] = 0;
+            i = i + 2;
+            break;
+        }
+    }
+    size_t j = 0;
+    for (; i < out_len; i++) {
+        char c = out[i];
+        if (c != 0) {
+            stakerFee[j++] = c;
+        } else
+            break;
+    }
+    if (j) stakerFee[j] = 0;
+    return j != 0;
+}
