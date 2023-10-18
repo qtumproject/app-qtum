@@ -20,16 +20,54 @@
 
 #include "../globals.h"
 #include "menu.h"
+#include "display.h"
 
 static const char* const infoTypes[] = {"Version", "Developer", "Copyright"};
 static const char* const infoContents[] = {APPVERSION, "Ledger", "(c) 2023 Ledger"};
 
+enum {
+    BLIND_SIGNING_TOKEN = FIRST_USER_TOKEN,
+};
+
+static nbgl_layoutSwitch_t switches[1];
+
+static void controls_call_back(int token, uint8_t index) {
+    (void) index;
+    uint8_t value;
+    switch (token) {
+        case BLIND_SIGNING_TOKEN:
+            value = (N_storage.dataAllowed ? 0 : 1);
+            nvm_write((void*) &N_storage.dataAllowed, (void*) &value, sizeof(uint8_t));
+            break;
+    }
+}
+
 static bool navigation_cb(uint8_t page, nbgl_pageContent_t* content) {
-    UNUSED(page);
-    content->type = INFOS_LIST;
-    content->infosList.nbInfos = 3;
-    content->infosList.infoTypes = (const char**) infoTypes;
-    content->infosList.infoContents = (const char**) infoContents;
+    uint8_t index = 0;
+    switch (page) {
+        case 0:
+            content->type = INFOS_LIST;
+            content->infosList.nbInfos = 3;
+            content->infosList.infoTypes = (const char**) infoTypes;
+            content->infosList.infoContents = (const char**) infoContents;
+            break;
+
+        case 1:
+            switches[index++] =
+                (nbgl_layoutSwitch_t){.initState = N_storage.dataAllowed ? ON_STATE : OFF_STATE,
+                                      .text = "Blind signing",
+                                      .subText = "Enable transaction blind\nsigning",
+                                      .token = BLIND_SIGNING_TOKEN,
+                                      .tuneId = TUNE_TAP_CASUAL};
+            content->type = SWITCHES_LIST;
+            content->switchesList.nbSwitches = index;
+            content->switchesList.switches = (nbgl_layoutSwitch_t*) switches;
+            break;
+
+        default:
+            return false;
+            break;
+    }
     return true;
 }
 
@@ -51,10 +89,24 @@ void ui_menu_main_flow_bitcoin_testnet(void) {
 }
 
 void ui_menu_about(void) {
-    nbgl_useCaseSettings("Qtum", 0, 1, false, ui_menu_main, navigation_cb, NULL);
+    nbgl_useCaseSettings("Qtum", 0, 2, false, ui_menu_main, navigation_cb, controls_call_back);
 }
 
 void ui_menu_about_testnet(void) {
-    nbgl_useCaseSettings("Qtum Test", 0, 1, false, ui_menu_main, navigation_cb, NULL);
+    nbgl_useCaseSettings("Qtum Test", 0, 2, false, ui_menu_main, navigation_cb, controls_call_back);
+}
+
+void settings_call_back(void) {
+    set_ux_flow_response(N_storage.dataAllowed);
+}
+
+void ui_menu_settings(void) {
+    nbgl_useCaseSettings("Qtum",
+                         1,
+                         2,
+                         false,
+                         settings_call_back,
+                         navigation_cb,
+                         controls_call_back);
 }
 #endif  // HAVE_NBGL

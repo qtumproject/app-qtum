@@ -57,6 +57,7 @@ typedef struct {
     char address_or_description[MAX(MAX_ADDRESS_LENGTH_STR + 1,
                                     MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT)];
     char amount[MAX_AMOUNT_LENGTH + 1];
+    char staker_fee[sizeof("99 #")];
 } ui_validate_output_state_t;
 
 typedef struct {
@@ -126,6 +127,8 @@ bool ui_warn_unverified_segwit_inputs(dispatcher_context_t *context);
 
 bool ui_warn_nondefault_sighash(dispatcher_context_t *context);
 
+bool ui_warn_contract_data(dispatcher_context_t *context);
+
 bool ui_validate_output(dispatcher_context_t *context,
                         int index,
                         int total_count,
@@ -178,6 +181,8 @@ bool ui_post_processing_confirm_wallet_spend(dispatcher_context_t *context, bool
 bool ui_post_processing_confirm_transaction(dispatcher_context_t *context, bool success);
 
 bool ui_post_processing_confirm_message(dispatcher_context_t *context, bool success);
+
+void ui_warning_contract_data(void);
 
 #ifdef HAVE_NBGL
 bool ui_transaction_prompt(dispatcher_context_t *context,

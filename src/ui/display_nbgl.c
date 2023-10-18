@@ -6,12 +6,13 @@
 #include "./display.h"
 #include "./menu.h"
 #include "io.h"
+#include "../common/script.h"
 
 typedef struct {
     const char *confirm;           // text displayed in last transaction page
     const char *confirmed_status;  // text displayed in confirmation page (after long press)
     const char *rejected_status;   // text displayed in rejection page (after reject confirmed)
-    nbgl_layoutTagValue_t tagValuePair[3];
+    nbgl_layoutTagValue_t tagValuePair[4];
     nbgl_layoutTagValueList_t tagValueList;
     nbgl_pageInfoLongPress_t infoLongPress;
     int extOutputCount;
@@ -158,6 +159,21 @@ static void continue_callback(void) {
                              start_processing_callback);
 }
 
+static void sign_message_callback(void) {
+    transactionContext.tagValueList.pairs = transactionContext.tagValuePair;
+
+    transactionContext.infoLongPress.icon = &C_Bitcoin_64px;
+    transactionContext.infoLongPress.longPressText = "Hold to sign";
+    transactionContext.infoLongPress.longPressToken = CONFIRM_TOKEN;
+    transactionContext.infoLongPress.tuneId = TUNE_TAP_CASUAL;
+    transactionContext.infoLongPress.text = transactionContext.confirm;
+
+    nbgl_useCaseStaticReview(&transactionContext.tagValueList,
+                             &transactionContext.infoLongPress,
+                             "Reject",
+                             start_processing_callback);
+}
+
 // Transaction flow
 static void transaction_confirm(int token, uint8_t index) {
     (void) index;
@@ -293,10 +309,23 @@ void ui_display_output_address_amount_flow(int index) {
     transactionContext.tagValuePair[1].item = "Amount";
     transactionContext.tagValuePair[1].value = g_ui_state.validate_output.amount;
 
-    transactionContext.tagValuePair[2].item = "Address";
-    transactionContext.tagValuePair[2].value = g_ui_state.validate_output.address_or_description;
+    size_t out_len = MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT);
+    bool hasDelegate = get_delegate_data(g_ui_state.validate_output.address_or_description,
+                                         out_len,
+                                         g_ui_state.validate_output.staker_fee);
+    if (hasDelegate) {
+        transactionContext.tagValuePair[2].item = "Delegate to";
+        transactionContext.tagValuePair[2].value =
+            g_ui_state.validate_output.address_or_description;
+        transactionContext.tagValuePair[3].item = "Fee";
+        transactionContext.tagValuePair[3].value = g_ui_state.validate_output.staker_fee;
+    } else {
+        transactionContext.tagValuePair[2].item = "Address";
+        transactionContext.tagValuePair[2].value =
+            g_ui_state.validate_output.address_or_description;
+    }
 
-    transactionContext.tagValueList.nbPairs = 3;
+    transactionContext.tagValueList.nbPairs = hasDelegate ? 4 : 3;
 
     display_output();
 }
@@ -308,10 +337,23 @@ void ui_display_output_address_amount_no_index_flow(int index) {
     transactionContext.tagValuePair[0].item = "Amount";
     transactionContext.tagValuePair[0].value = g_ui_state.validate_output.amount;
 
-    transactionContext.tagValuePair[1].item = "Address";
-    transactionContext.tagValuePair[1].value = g_ui_state.validate_output.address_or_description;
+    size_t out_len = MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT);
+    bool hasDelegate = get_delegate_data(g_ui_state.validate_output.address_or_description,
+                                         out_len,
+                                         g_ui_state.validate_output.staker_fee);
+    if (hasDelegate) {
+        transactionContext.tagValuePair[1].item = "Delegate to";
+        transactionContext.tagValuePair[1].value =
+            g_ui_state.validate_output.address_or_description;
+        transactionContext.tagValuePair[2].item = "Fee";
+        transactionContext.tagValuePair[2].value = g_ui_state.validate_output.staker_fee;
+    } else {
+        transactionContext.tagValuePair[1].item = "Address";
+        transactionContext.tagValuePair[1].value =
+            g_ui_state.validate_output.address_or_description;
+    }
 
-    transactionContext.tagValueList.nbPairs = 2;
+    transactionContext.tagValueList.nbPairs = hasDelegate ? 3 : 2;
 
     display_output();
 }
@@ -440,15 +482,15 @@ void ui_sign_message_flow(void) {
 
     transactionContext.tagValueList.nbPairs = 2;
 
-    transactionContext.confirm = "Sign Message";
+    transactionContext.confirm = "Sign Message?";
     transactionContext.confirmed_status = "MESSAGE\nSIGNED";
     transactionContext.rejected_status = "Message rejected";
 
     nbgl_useCaseReviewStart(&C_Bitcoin_64px,
-                            "Confirm signature",
+                            "Review message",
                             "",
-                            "Cancel",
-                            continue_callback,
+                            "Reject",
+                            sign_message_callback,
                             ux_flow_response_false);
 }
 
@@ -547,6 +589,23 @@ void ui_display_post_processing_confirm_wallet_spend(bool success) {
     } else {
         nbgl_useCaseStatus("Wallet name rejected", false, ux_flow_response_false);
     }
+}
+
+static void ui_warning_contract_data_choice(bool confirm) {
+    if (confirm) {
+        ux_flow_response_false();
+    } else {
+        ui_menu_settings();
+    }
+}
+
+void ui_warning_contract_data(void) {
+    nbgl_useCaseChoice(&C_round_warning_64px,
+                       "This message cannot\nbe clear-signed",
+                       "Enable blind-signing in\nthe settings to sign\nthis transaction.",
+                       "Exit",
+                       "Go to settings",
+                       ui_warning_contract_data_choice);
 }
 
 #endif  // HAVE_NBGL

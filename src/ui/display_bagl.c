@@ -167,6 +167,20 @@ UX_STEP_NOCB(ux_validate_address_step,
                  .text = g_ui_state.validate_output.address_or_description,
              });
 
+UX_STEP_NOCB(ux_validate_delegate_to_step,
+             bnnn_paging,
+             {
+                 .title = "Delegate to",
+                 .text = g_ui_state.validate_output.address_or_description,
+             });
+
+UX_STEP_NOCB(ux_validate_staker_fee_step,
+             bnnn_paging,
+             {
+                 .title = "Fee",
+                 .text = g_ui_state.validate_output.staker_fee,
+             });
+
 UX_STEP_NOCB(ux_confirm_transaction_step, pnn, {&C_icon_eye, "Confirm", "transaction"});
 UX_STEP_NOCB(ux_confirm_selftransfer_step, pnn, {&C_icon_eye, "Confirm", "self-transfer"});
 UX_STEP_NOCB(ux_confirm_transaction_fees_step,
@@ -246,6 +260,25 @@ UX_STEP_CB(ux_sign_message_accept_new,
            pbb,
            set_ux_flow_response(true),
            {&C_icon_validate_14, "Sign", "message"});
+
+#ifdef TARGET_NANOS
+UX_STEP_CB(ux_warning_contract_data_step,
+           bnnn_paging,
+           set_ux_flow_response(false),
+           {
+               "Error",
+               "Blind signing must be enabled in Settings",
+           });
+#else
+UX_STEP_CB(ux_warning_contract_data_step,
+           pnn,
+           set_ux_flow_response(false),
+           {
+               &C_icon_crossmark,
+               "Blind signing must be",
+               "enabled in Settings",
+           });
+#endif
 
 // FLOW to display BIP32 path and a message hash to sign:
 // #1 screen: certificate icon + "Sign message"
@@ -391,6 +424,21 @@ UX_FLOW(ux_display_output_address_amount_flow,
         &ux_display_approve_step,
         &ux_display_reject_step);
 
+// FLOW to validate a single delegate output
+// #1 screen: eye icon + "Review" + index of output to validate
+// #2 screen: output amount
+// #3 screen: output staker address
+// #4 screen: output staker fee
+// #5 screen: approve button
+// #6 screen: reject button
+UX_FLOW(ux_display_output_delegate_flow,
+        &ux_review_step,
+        &ux_validate_amount_step,
+        &ux_validate_delegate_to_step,
+        &ux_validate_staker_fee_step,
+        &ux_display_approve_step,
+        &ux_display_reject_step);
+
 // Finalize see the transaction fees and finally accept signing
 // #1 screen: eye icon + "Confirm transaction"
 // #2 screen: fee amount
@@ -423,6 +471,8 @@ UX_FLOW(ux_sign_sender_transaction_flow,
         &ux_confirm_transaction_fees_step,
         &ux_sign_sender_step,
         &ux_display_reject_step);
+
+UX_FLOW(ux_warning_contract_data_flow, &ux_warning_contract_data_step);
 
 void ui_display_pubkey_flow(void) {
     ux_flow_init(0, ux_display_pubkey_flow, NULL);
@@ -473,7 +523,15 @@ void ui_display_output_address_amount_flow(int index) {
              sizeof(g_ui_state.validate_output.index),
              "output #%d",
              index);
-    ux_flow_init(0, ux_display_output_address_amount_flow, NULL);
+    size_t out_len = MAX(MAX_ADDRESS_LENGTH_STR + 1, MAX_OPRETURN_OUTPUT_DESC_SIZE_SHORT);
+    bool hasDelegate = get_delegate_data(g_ui_state.validate_output.address_or_description,
+                                         out_len,
+                                         g_ui_state.validate_output.staker_fee);
+    if (hasDelegate) {
+        ux_flow_init(0, ux_display_output_delegate_flow, NULL);
+    } else {
+        ux_flow_init(0, ux_display_output_address_amount_flow, NULL);
+    }
 }
 
 void ui_display_output_address_amount_no_index_flow(int index) {
@@ -490,6 +548,10 @@ void ui_accept_transaction_flow(bool is_self_transfer, bool sign_sender) {
                      is_self_transfer ? ux_accept_selftransfer_flow : ux_accept_transaction_flow,
                      NULL);
     }
+}
+
+void ui_warning_contract_data(void) {
+    ux_flow_init(0, ux_warning_contract_data_flow, NULL);
 }
 
 #endif  // HAVE_BAGL

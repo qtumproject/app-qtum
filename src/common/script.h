@@ -182,6 +182,8 @@ bool is_opcall(const uint8_t script[], size_t script_len);
 
 bool is_opsender(const uint8_t script[], size_t script_len);
 
+bool is_contract_blind_sign(const uint8_t script[], size_t script_len);
+
 /**
  * Returns the size in bytes of the minimal push opcode for <n>, where n a uint32_t.
  */
@@ -261,3 +263,5 @@ bool opcall_addr_encode(const uint8_t script[],
                         size_t out_len,
                         bool isOpSender);
 #endif
+
+bool get_delegate_data(char *out, size_t out_len, char *stakerFee);
