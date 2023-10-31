@@ -158,10 +158,10 @@ typedef enum {
     SCRIPT_TYPE_P2WSH = 0x03,
     SCRIPT_TYPE_P2TR = 0x04,
     SCRIPT_TYPE_UNKNOWN_SEGWIT = 0xFF,  // a valid but undefined segwit script
-    SCRIPT_TYPE_CREATE_SENDER,
-    SCRIPT_TYPE_CALL_SENDER,
-    SCRIPT_TYPE_CREATE,
-    SCRIPT_TYPE_CALL,
+    SCRIPT_TYPE_CREATE_SENDER = 0x100,
+    SCRIPT_TYPE_CALL_SENDER = 0x101,
+    SCRIPT_TYPE_CREATE = 0x102,
+    SCRIPT_TYPE_CALL = 0x103,
 } script_type_e;
 
 static inline bool is_p2wpkh(const uint8_t script[], size_t script_len) {
