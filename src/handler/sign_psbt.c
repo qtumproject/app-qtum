@@ -1369,7 +1369,7 @@ static bool read_outputs(dispatcher_context_t *dc,
     for (unsigned int cur_output_index = 0; cur_output_index < st->n_outputs; cur_output_index++) {
         output_info_t output;
         memset(&output, 0, sizeof(output));
-        bool isOpSender = false;
+        bool signOpSender = false;
 
         output_keys_callback_data_t callback_data = {.output = &output,
                                                      .placeholder_info = placeholder_info};
@@ -1449,13 +1449,34 @@ static bool read_outputs(dispatcher_context_t *dc,
                 }
             }
 
+            // check sender signature present for contract output
+            if (is_opsender(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len)) {
+                uint8_t *sig = 0;
+                unsigned int sigSize = 0;
+                if (get_sender_sig(output.in_out.scriptPubKey,
+                                   output.in_out.scriptPubKey_len,
+                                   &sig,
+                                   &sigSize)) {
+                    if (hash) {
+                        // sender signature present, incorrect data for sign sender
+                        SEND_SW(dc, SW_INCORRECT_DATA);
+                        return false;
+                    }
+                } else {
+                    if (hash) {
+                        // the sender need to be signed
+                        signOpSender = true;
+                    } else {
+                        // sender signature not present, incorrect data for sign tranaction
+                        SEND_SW(dc, SW_INCORRECT_DATA);
+                        return false;
+                    }
+                }
+            }
+
             if (!dry_run &&
                 !display_output(dc, st, cur_output_index, external_outputs_count, &output))
                 return false;
-            if (hash) {
-                isOpSender =
-                    is_opsender(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len);
-            }
         } else if (!dry_run) {
             // valid change address, nothing to show to the user
 
@@ -1463,7 +1484,7 @@ static bool read_outputs(dispatcher_context_t *dc,
             ++st->outputs.n_change;
         }
 
-        if (isOpSender) {
+        if (signOpSender) {
             {
                 cx_sha256_t sighash_context;
 
