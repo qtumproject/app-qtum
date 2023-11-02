@@ -1450,7 +1450,8 @@ static bool read_outputs(dispatcher_context_t *dc,
             }
 
             // check sender signature present for contract output
-            if (is_opsender(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len)) {
+            if (!dry_run &&
+                is_opsender(output.in_out.scriptPubKey, output.in_out.scriptPubKey_len)) {
                 uint8_t *sig = 0;
                 unsigned int sigSize = 0;
                 if (get_sender_sig(output.in_out.scriptPubKey,
