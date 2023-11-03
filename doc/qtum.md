@@ -20,7 +20,7 @@ The main commands use `CLA = 0xE1`, unlike the legacy Qtum application that used
 |  E1 |  04 | SIGN_PSBT              | Sign a PSBT with a registered or default wallet |
 |  E1 |  05 | GET_MASTER_FINGERPRINT | Return the fingerprint of the master public key |
 |  E1 |  10 | SIGN_MESSAGE           | Sign a message with a key from a BIP32 path (Qtum Message Signing) |
-|  E1 |  81 | SIGN_SENDER_PSBT       | Sign an op_sender output |
+|  E1 |  81 | SIGN_SENDER_PSBT       | Sign a contract sender output (op_sender) |
 
 The `CLA = 0xF8` is used for framework-specific (rather than app-specific) APDUs; at this time, only one command is present.
 
@@ -330,6 +330,67 @@ The digest being signed is the double-SHA256 of the message, after prefixing the
 
 The client must respond to the `GET_PREIMAGE`, `GET_MERKLE_LEAF_PROOF` and `GET_MERKLE_LEAF_INDEX` queries for the Merkle tree of the list of chunks in the message.
 
+### SIGN_SENDER_PSBT
+
+Given a PSBTv2 and a registered wallet (or a standard one), sign a contract sender output using a wallet address.
+
+#### Encoding
+
+**Command**
+
+| *CLA* | *INS* |
+|-------|-------|
+| E1    | 81    |
+
+**Input data**
+
+| Length  | Name                   | Description |
+|---------|------------------------|-------------|
+| `1`     | `n`                    | Number of derivation steps (maximum 8) |
+| `4`     | `bip32_path[0]`        | First derivation step (big endian) |
+| `4`     | `bip32_path[1]`        | Second derivation step (big endian) |
+|         | ...                    |             |
+| `4`     | `bip32_path[n-1]`      | `n`-th derivation step (big endian) |
+| `<var>` | `global_map_size`      | The number of key/value pairs of the global map of the psbt |
+| `32`    | `global_map_keys_root` | The Merkle root of the keys of the global map |
+| `32`    | `global_map_vals_root` | The Merkle root of the values of the global map |
+| `<var>` | `n_inputs`             | The number of inputs of the psbt | 
+| `32`    | `inputs_maps_root`     | The Merkle root of the vector of Merkleized map commitments for the input maps |
+| `<var>` | `n_outputs`            | The number of outputs of the psbt | 
+| `32`    | `outputs_maps_root`    | The Merkle root of the vector of Merkleized map commitments for the output maps |
+| `32`    | `wallet_id`            | The id of the wallet |
+| `32`    | `wallet_hmac`          | The hmac of a registered wallet, or exactly 32 0 bytes |
+
+**Output data**
+
+The signature is returned using the YIELD client command.
+
+#### Description
+
+Using the information in the PSBT and the wallet description, this command verifies what inputs are internal and what outputs match the pattern for a change address. After validating all the external outputs and the transaction fee with the user, it sign the contract sender output with the `bip32_path` address; the signature is sent to the client using the YIELD command, in the format described below.
+
+The results yielded via the YIELD command respect the following format: `<output_index> <pubkey_augm_len> <pubkey_augm> <signature>`, where:
+- `output_index` is a Qtum style varint, the index of the output being signed (starting from 0);
+- `pubkey_augm_len` is an unsigned byte equal to the length of `pubkey_augm`;
+- `pubkey_augm` is the legacy `pubkey` used for signing;
+- `signature` is the returned signature, possibly concatenated with the sighash byte (as it would be pushed on the stack).
+
+If `P2` is `0` (version `0` of the protocol), `pubkey_augm_len` and `pubkey_augm` are omitted in the YIELD messages.
+
+For a registered wallet, the hmac must be correct.
+
+For a default wallet, `hmac` must be equal to 32 bytes `0`.
+
+#### Client commands
+
+`GET_PREIMAGE` must know and respond for the full serialized wallet policy whose sha256 hash is `wallet_id`; moreover, it must know and respond for the sha256 hash of its descriptor template.
+
+The client must respond to the `GET_PREIMAGE`, `GET_MERKLE_LEAF_PROOF` and `GET_MERKLE_LEAF_INDEX` queries for all the Merkle trees in the input, including each of the Merkle trees for keys and values of the Merkleized map commitments of each of the inputs/outputs maps of the psbt.
+
+The `GET_MORE_ELEMENTS` command must be handled.
+
+The `YIELD` command must be processed in order to receive the signature.
+
 ## Client commands reference
 
 This section documents the commands that the Hardware Wallet can request to the client when returning with a `SW_INTERRUPTED_EXECUTION` status word.
@@ -346,7 +407,7 @@ This section documents the commands that the Hardware Wallet can request to the 
 
 **Command code**: 0x10
 
-The `YIELD` client command is sent to the client to communicate some result during the execution of a command. Currently only used during `SIGN_PSBT` in order to communicate each of the signatures. The format of the attached message is documented for each command that uses `YIELD`.
+The `YIELD` client command is sent to the client to communicate some result during the execution of a command. Currently used during `SIGN_PSBT` and `SIGN_SENDER_PSBT` in order to communicate each of the signatures. The format of the attached message is documented for each command that uses `YIELD`.
 
 The client must respond with an empty message.
 

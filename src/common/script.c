@@ -84,7 +84,8 @@ int get_script_type(const uint8_t script[], size_t script_len) {
 
 #ifndef SKIP_FOR_CMOCKA
 
-// TODO: add unit tests
+// crypto.c is disabled in unit tests by Bitcoin, which is needed for get_script_address
+// unit tests should be added for script address when it is enabled
 int get_script_address(const uint8_t script[], size_t script_len, char *out, size_t out_len) {
     int script_type = get_script_type(script, script_len);
     int addr_len;

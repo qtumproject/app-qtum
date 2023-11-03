@@ -133,6 +133,10 @@ bool buffer_read_u64(buffer_t *buffer, uint64_t *value, endianness_t endianness)
 }
 
 bool buffer_read_varint(buffer_t *buffer, uint64_t *value) {
+    if (buffer->ptr == NULL) {
+        return false;
+    }
+
     int length = varint_read(buffer->ptr + buffer->offset, buffer->size - buffer->offset, value);
 
     if (length < 0) {

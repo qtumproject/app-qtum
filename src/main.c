@@ -112,7 +112,7 @@ const command_descriptor_t COMMAND_DESCRIPTORS[] = {
 void app_main() {
     for (;;) {
         // Length of APDU command received in G_io_apdu_buffer
-        int input_len = 0;
+        size_t input_len = 0;
         // Structured APDU command
         command_t cmd;
 
@@ -122,11 +122,6 @@ void app_main() {
         // Receive command bytes in G_io_apdu_buffer
 
         input_len = io_exchange(CHANNEL_APDU | IO_ASYNCH_REPLY, 0);
-
-        if (input_len < 0) {
-            PRINTF("=> io_exchange error\n");
-            return;
-        }
 
         // Reset structured APDU command
         memset(&cmd, 0, sizeof(cmd));
@@ -315,7 +310,6 @@ static void swap_library_main_helper(struct libargs_s *args) {
 
                 USB_power(0);
                 USB_power(1);
-                // ui_idle();
                 PRINTF("USB power ON/OFF\n");
 #ifdef HAVE_BLE
                 // grab the current plane mode setting

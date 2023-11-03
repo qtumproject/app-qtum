@@ -9,8 +9,6 @@ int call_get_merkle_leaf_element(dispatcher_context_t *dispatcher_context,
                                  uint32_t leaf_index,
                                  uint8_t *out_ptr,
                                  size_t out_ptr_len) {
-    // LOG_PROCESSOR(__FILE__, __LINE__, __func__);
-
     uint8_t leaf_hash[32];
 
     int res = call_get_merkle_leaf_hash(dispatcher_context,

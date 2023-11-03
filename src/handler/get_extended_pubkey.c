@@ -63,8 +63,12 @@ static bool is_path_safe_for_pubkey_export(const uint32_t bip32_path[],
             break;
         case 45:
             // BIP-45 prescribes simply length 1, but we instead support existing deployed
-            // use cases with path "m/45'/coin_type'/account'
-            hardened_der_len = 3;
+            // use cases with path "m/45'/coin_type'/account' or "m/45'/coin_type'/account
+            if (bip32_path[2] < 0x80000000) {
+                hardened_der_len = 2;
+            } else {
+                hardened_der_len = 3;
+            }
             break;
         case 48:
             hardened_der_len = 4;
