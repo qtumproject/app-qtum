@@ -2,7 +2,7 @@
 
 #include "get_merkle_preimage.h"
 
-#include "../../boilerplate/sw.h"
+#include "../../kernel/sw.h"
 #include "../../common/buffer.h"
 #include "../../crypto.h"
 #include "../client_commands.h"

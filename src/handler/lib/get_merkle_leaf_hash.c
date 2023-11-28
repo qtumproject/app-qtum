@@ -6,7 +6,7 @@
 #include "../../common/write.h"
 #include "../../common/merkle.h"
 #include "../../common/varint.h"
-#include "../../boilerplate/sw.h"
+#include "../../kernel/sw.h"
 #include "../client_commands.h"
 
 #include "debug-helpers/debug.h"

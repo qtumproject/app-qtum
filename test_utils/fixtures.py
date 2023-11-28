@@ -57,8 +57,8 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope="module")
 def sw_h_path():
-    # sw.h should be in src/boilerplate/sw.h
-    sw_h_path = repo_root_path / "src" / "boilerplate" / "sw.h"
+    # sw.h should be in src/kernel/sw.h
+    sw_h_path = repo_root_path / "src" / "kernel" / "sw.h"
 
     if not sw_h_path.is_file():
         raise FileNotFoundError(f"Can't find sw.h: '{sw_h_path}'")
