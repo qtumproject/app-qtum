@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../../boilerplate/sw.h"
+#include "../../kernel/sw.h"
 #include "get_merkle_leaf_hash.h"
 
 #include "../client_commands.h"

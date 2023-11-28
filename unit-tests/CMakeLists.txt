@@ -51,7 +51,7 @@ add_executable(test_wallet test_wallet.c)
 add_executable(test_write test_write.c)
 #add_executable(test_crypto test_crypto.c)
 
-add_library(apdu_parser SHARED ../src/boilerplate/apdu_parser.c)
+add_library(apdu_parser SHARED ../src/kernel/apdu_parser.c)
 add_library(base58 SHARED ../src/common/base58.c)
 add_library(bip32 SHARED ../src/common/bip32.c)
 add_library(buffer SHARED ../src/common/buffer.c)

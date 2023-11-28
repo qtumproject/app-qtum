@@ -17,8 +17,8 @@
 
 #include <stdint.h>
 
-#include "boilerplate/io.h"
-#include "boilerplate/sw.h"
+#include "kernel/io.h"
+#include "kernel/sw.h"
 #include "../common/base58.h"
 #include "../common/bip32.h"
 #include "../common/buffer.h"

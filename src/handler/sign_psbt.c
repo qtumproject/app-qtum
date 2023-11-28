@@ -19,8 +19,8 @@
 
 #include "lib_standard_app/crypto_helpers.h"
 
-#include "../boilerplate/dispatcher.h"
-#include "../boilerplate/sw.h"
+#include "../kernel/dispatcher.h"
+#include "../kernel/sw.h"
 #include "../common/bitvector.h"
 #include "../common/merkle.h"
 #include "../common/psbt.h"
