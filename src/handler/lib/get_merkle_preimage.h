@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../boilerplate/dispatcher.h"
+#include "../../kernel/dispatcher.h"
 
 /**
  * In this flow, the HWW sends a CCMD_GET_PREIMAGE command with a SHA256 hash.

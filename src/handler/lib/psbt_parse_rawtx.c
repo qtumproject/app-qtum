@@ -8,8 +8,8 @@
 #include "get_merkleized_map_value_hash.h"
 #include "stream_preimage.h"
 
-#include "../../boilerplate/dispatcher.h"
-#include "../../boilerplate/sw.h"
+#include "../../kernel/dispatcher.h"
+#include "../../kernel/sw.h"
 
 #include "../../common/buffer.h"
 #include "../../common/parser.h"

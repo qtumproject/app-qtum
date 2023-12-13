@@ -10,7 +10,7 @@
 
 #include "../cxram_stash.h"
 
-#include "../boilerplate/sw.h"
+#include "../kernel/sw.h"
 
 #include "../debug-helpers/debug.h"
 

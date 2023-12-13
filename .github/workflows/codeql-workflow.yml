@@ -13,16 +13,16 @@ on:
 
 jobs:
   analyse:
-    name: CodeQL Analyse of boilerplate application
+    name: CodeQL Analyse of kernel application
     strategy: 
       matrix:
         include:
           - SDK: "$NANOS_SDK"
-            artifact: boilerplate-app-nanoS
+            artifact: kernel-app-nanoS
           - SDK: "$NANOX_SDK"
-            artifact: boilerplate-app-nanoX
+            artifact: kernel-app-nanoX
           - SDK: "$NANOSP_SDK"
-            artifact: boilerplate-app-nanoSP
+            artifact: kernel-app-nanoSP
         language: [ 'cpp' ]
     runs-on: ubuntu-latest
     container:

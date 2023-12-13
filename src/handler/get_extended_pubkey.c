@@ -17,9 +17,9 @@
 
 #include <stdint.h>
 
-#include "boilerplate/io.h"
-#include "boilerplate/dispatcher.h"
-#include "boilerplate/sw.h"
+#include "kernel/io.h"
+#include "kernel/dispatcher.h"
+#include "kernel/sw.h"
 #include "../common/bip32.h"
 #include "../commands.h"
 #include "../constants.h"

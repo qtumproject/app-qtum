@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../boilerplate/dispatcher.h"
+#include "../../kernel/dispatcher.h"
 
 /**
  * Given a sha256 hash, requests the corresponding pre-image to the host.

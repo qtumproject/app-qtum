@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../../boilerplate/sw.h"
+#include "../../kernel/sw.h"
 #include "stream_preimage.h"
 
 #include "../../crypto.h"

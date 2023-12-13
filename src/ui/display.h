@@ -1,15 +1,15 @@
 #pragma once
 
 #include <stdbool.h>  // bool
-#include "../boilerplate/dispatcher.h"
+#include "../kernel/dispatcher.h"
 
 #include "../common/wallet.h"
 #include "./display.h"
 #include "./display_utils.h"
 #include "../constants.h"
 #include "../globals.h"
-#include "../boilerplate/io.h"
-#include "../boilerplate/sw.h"
+#include "../kernel/io.h"
+#include "../kernel/sw.h"
 #include "../common/bip32.h"
 #include "../common/format.h"
 #include "../common/script.h"

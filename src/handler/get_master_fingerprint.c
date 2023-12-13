@@ -17,8 +17,8 @@
 
 #include <stdint.h>
 
-#include "boilerplate/dispatcher.h"
-#include "boilerplate/sw.h"
+#include "kernel/dispatcher.h"
+#include "kernel/sw.h"
 #include "../commands.h"
 #include "../crypto.h"
 

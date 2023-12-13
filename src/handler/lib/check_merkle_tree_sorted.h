@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../boilerplate/dispatcher.h"
+#include "../../kernel/dispatcher.h"
 #include "../../common/merkle.h"
 
 // this flow aborts if any element is larger than this size

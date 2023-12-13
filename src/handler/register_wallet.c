@@ -21,8 +21,8 @@
 #include "os.h"
 #include "cx.h"
 
-#include "../boilerplate/dispatcher.h"
-#include "../boilerplate/sw.h"
+#include "../kernel/dispatcher.h"
+#include "../kernel/sw.h"
 #include "../common/bip32.h"
 #include "../common/merkle.h"
 #include "../common/read.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../boilerplate/dispatcher.h"
+#include "../../kernel/dispatcher.h"
 #include "../../common/merkle.h"
 
 #include "check_merkle_tree_sorted.h"
